@@ -1,0 +1,81 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+import TopNav from "@/components/TopNav";
+import {
+  canAccess,
+  clearRole,
+  getRole,
+  roleHome,
+  type Role,
+} from "@/lib/auth";
+import type { Language } from "@/lib/translations";
+
+/**
+ * Client shell that owns role-based access for the whole app:
+ * - Not logged in → every route except /login redirects to /login.
+ * - Logged in → route must be allowed for the role, otherwise /access-denied.
+ * - Renders the top nav (with role-aware links + logout) only on authed pages.
+ */
+export default function AppShell({
+  lang,
+  children,
+}: {
+  lang: Language;
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [role, setRole] = useState<Role | null>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const current = getRole();
+    setRole(current);
+
+    if (!current) {
+      // Not logged in — only /login is reachable.
+      if (pathname !== "/login") {
+        router.replace("/login");
+        return;
+      }
+    } else if (pathname === "/login") {
+      // Already logged in — skip the login page.
+      router.replace(roleHome(current));
+      return;
+    } else if (!canAccess(current, pathname)) {
+      router.replace("/access-denied");
+      return;
+    }
+    setReady(true);
+  }, [pathname, router]);
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-100">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-700 border-t-transparent" />
+        <span className="sr-only">Loading…</span>
+      </div>
+    );
+  }
+
+  const showNav = pathname !== "/login" && pathname !== "/access-denied";
+
+  return (
+    <>
+      {showNav && role && (
+        <TopNav
+          lang={lang}
+          role={role}
+          onLogout={() => {
+            clearRole();
+            router.replace("/login");
+          }}
+        />
+      )}
+      <main className={showNav ? "min-w-0 pt-20" : "min-w-0"}>{children}</main>
+    </>
+  );
+}

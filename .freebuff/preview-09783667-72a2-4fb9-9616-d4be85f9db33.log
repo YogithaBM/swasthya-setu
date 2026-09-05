@@ -1,0 +1,20 @@
+
+> swasthya-setu@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.7s
+ ○ Compiling / ...
+ ✓ Compiled / in 4.6s (562 modules)
+ GET / 200 in 4981ms
+ GET / 200 in 53ms
+ GET / 200 in 46ms
+ GET / 200 in 49ms
+ ○ Compiling /availability ...
+ ✓ Compiled /availability in 5.6s (1656 modules)
+ GET /availability 200 in 5928ms
+[?25h
