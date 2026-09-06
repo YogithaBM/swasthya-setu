@@ -28,6 +28,8 @@ export interface Translation {
     labOrders: string;
     escalations: string;
     myRecords: string;
+    /** Collapsed overflow menu ("More ▾") holding the low-priority doctor links. */
+    moreMenu: string;
     asha: string;
   };
   roles: {
@@ -375,6 +377,10 @@ export interface Translation {
     noFollowups: string;
     labsSection: string;
     noLabs: string;
+    appointmentsSection: string;
+    noAppointments: string;
+    emergenciesSection: string;
+    noEmergencies: string;
     labStatusPending: string;
     labStatusCompleted: string;
     referralsSection: string;
@@ -451,6 +457,7 @@ export const translations: Record<Language, Translation> = {
       labOrders: "Lab Orders",
       escalations: "Escalations",
       myRecords: "My Records",
+      moreMenu: "More ▾",
       asha: "My Patients",
     },
     roles: {
@@ -785,6 +792,10 @@ export const translations: Record<Language, Translation> = {
       noFollowups: "No upcoming follow-ups.",
       labsSection: "Lab Tests",
       noLabs: "No lab tests ordered.",
+      appointmentsSection: "Appointments",
+      noAppointments: "No appointments booked.",
+      emergenciesSection: "Emergency Escalations",
+      noEmergencies: "No emergency escalations.",
       labStatusPending: "Pending",
       labStatusCompleted: "Completed",
       referralsSection: "Active Referrals",
@@ -891,6 +902,7 @@ export const translations: Record<Language, Translation> = {
       labOrders: "लैब ऑर्डर",
       escalations: "एस्कलेशन",
       myRecords: "मेरे रिकॉर्ड",
+      moreMenu: "और ▾",
       asha: "मेरे मरीज़",
     },
     roles: {
@@ -1225,6 +1237,10 @@ export const translations: Record<Language, Translation> = {
       noFollowups: "कोई आगामी फॉलो-अप नहीं।",
       labsSection: "लैब टेस्ट",
       noLabs: "कोई लैब टेस्ट ऑर्डर नहीं हुआ।",
+      appointmentsSection: "अपॉइंटमेंट",
+      noAppointments: "कोई अपॉइंटमेंट बुक नहीं हुआ।",
+      emergenciesSection: "आपातकालीन एस्कलेशन",
+      noEmergencies: "कोई आपातकालीन मामला नहीं।",
       labStatusPending: "लंबित",
       labStatusCompleted: "पूर्ण",
       referralsSection: "सक्रिय रेफ़रल",

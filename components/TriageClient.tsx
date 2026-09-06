@@ -229,7 +229,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
           {result.result.severity === "red" && escalatedTo && (
             <div
               role="alert"
-              className="emergency-banner relative overflow-hidden rounded-2xl bg-red-600 p-4 text-white shadow-lg shadow-red-600/30"
+              className="emergency-banner relative mb-4 overflow-hidden rounded-2xl bg-red-600 p-4 text-white shadow-lg shadow-red-600/30"
             >
               <div className="flex flex-wrap items-center gap-3">
                 <Siren className="h-7 w-7 shrink-0 animate-pulse" />

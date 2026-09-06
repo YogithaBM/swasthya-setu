@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   ArrowLeftRight,
   CalendarClock,
+  CalendarDays,
   CheckCircle2,
   FileText,
   FlaskConical,
@@ -15,6 +16,10 @@ import {
 import { getAshaPatients } from "@/lib/ashaPatients";
 import { getFacilityById } from "@/lib/data";
 import { getEmergenciesByPhone, type Emergency } from "@/lib/emergencies";
+import {
+  getAppointments,
+  type StoredAppointment,
+} from "@/lib/appointments";
 import { getLabOrdersByPhone, type LabOrder } from "@/lib/labOrders";
 import {
   getPatientRecords,
@@ -39,6 +44,37 @@ function todayStr(): string {
   return `${now.getFullYear()}-${month}-${day}`;
 }
 
+/**
+ * Pull a phone number out of an arbitrary record object. Datasets name the
+ * field differently ("phone", "mobile", "patientPhone", "phoneNumber",
+ * "contact") — check every known variant, plus a value scan fallback.
+ */
+function phoneOf(record: Record<string, unknown>): string {
+  const keys = ["phone", "mobile", "patientPhone", "phoneNumber", "contact", "mobileNumber"];
+  for (const key of keys) {
+    const value = record[key];
+    if (typeof value === "string" && value.trim()) return value.replace(/\D/g, "");
+    if (typeof value === "number") return String(value);
+  }
+  // Fallback: any string field that looks like a 10-digit Indian mobile.
+  for (const value of Object.values(record)) {
+    if (typeof value === "string" && /^[6-9]\d{9}$/.test(value.trim())) {
+      return value.replace(/\D/g, "");
+    }
+  }
+  return "";
+}
+
+/** Generic records for a phone from any store array. */
+function recordsForPhone<T>(store: T[], phone: string): T[] {
+  return store.filter(
+    (record) =>
+      typeof record === "object" &&
+      record !== null &&
+      phoneOf(record as Record<string, unknown>) === phone
+  );
+}
+
 export default function MyRecordsClient({ lang }: { lang: Language }) {
   const t = getTranslations(lang);
   const otherTitle = translations[lang === "hi" ? "en" : "hi"].myRecords.title;
@@ -49,6 +85,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
 
   // Data for the searched phone.
   const [patientName, setPatientName] = useState("");
+  const [appointments, setAppointments] = useState<StoredAppointment[]>([]);
   const [history, setHistory] = useState<PatientRecord[]>([]);
   const [labs, setLabs] = useState<LabOrder[]>([]);
   const [referrals, setReferrals] = useState<Referral[]>([]);
@@ -68,38 +105,78 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
     setPhoneError(null);
     setSearched(true);
 
-    // The canonical link is the patient-records store (it carries phone).
-    const allRecords = getPatientRecords();
-    const myRecords = allRecords
-      .filter((record) => record.phone === cleaned)
+    // Search EVERY store for this phone — each dataset may name the
+    // phone field differently, so recordsForPhone checks all variants.
+    const allAppointments = getAppointments();
+    const myAppointments = recordsForPhone(allAppointments, cleaned);
+    const myRecords = getPatientRecords()
+      .filter((record) => record.phone === cleaned || phoneOf(record as unknown as Record<string, unknown>) === cleaned)
       .sort((a, b) => b.date.localeCompare(a.date));
-    const nameFromRecords = myRecords[0]?.patientName ?? "";
+    const myLabs = getLabOrdersByPhone(cleaned).length
+      ? getLabOrdersByPhone(cleaned)
+      : recordsForPhone(getLabOrdersByPhoneAny(cleaned), cleaned).length
+        ? recordsForPhone(getLabOrdersByPhoneAny(cleaned), cleaned)
+        : [];
+    const myReferrals = recordsForPhone(getReferrals(), cleaned);
+    const myFollowups = recordsForPhone(getFollowups(), cleaned);
+    const myEmergencies = getEmergenciesByPhone(cleaned).length
+      ? getEmergenciesByPhone(cleaned)
+      : recordsForPhone(getEmergenciesAny(), cleaned);
 
-    setHistory(myRecords);
-    setPatientName(nameFromRecords || nameFromAsha(cleaned));
-    setLabs(getLabOrdersByPhone(cleaned));
-    setEmergencies(getEmergenciesByPhone(cleaned));
-
-    // Referrals and follow-ups don't carry a phone — match their patient
-    // name against the phone-linked records (case-insensitive).
-    const linkedNames = new Set(
-      myRecords.map((record) => record.patientName.trim().toLowerCase())
-    );
+    // Referrals/follow-ups may not carry a phone at all — fall back to
+    // matching their patient name against phone-linked records.
+    const linkedNames = new Set<string>([
+      ...myRecords.map((record) => record.patientName.trim().toLowerCase()),
+      ...myAppointments.map((appointment) => appointment.patientName.trim().toLowerCase()),
+    ]);
     const nameKnown = (candidate: string) =>
       linkedNames.has(candidate.trim().toLowerCase());
-    setReferrals(
-      getReferrals().filter((referral) => nameKnown(referral.patientName))
-    );
-    setFollowups(
-      getFollowups().filter((followup) => nameKnown(followup.patientName))
-    );
+    const resolvedReferrals = myReferrals.length
+      ? myReferrals
+      : getReferrals().filter((referral) => nameKnown(referral.patientName));
+    const resolvedFollowups = myFollowups.length
+      ? myFollowups
+      : getFollowups().filter((followup) => nameKnown(followup.patientName));
+
+    // Resolve a display name from whichever store knows this phone.
+    const ashaName =
+      getAshaPatients().find((patient) => patient.phone === cleaned)?.name ?? "";
+    const appointmentName = myAppointments[0]?.patientName ?? "";
+    const recordName = myRecords[0]?.patientName ?? "";
+
+    setAppointments(myAppointments);
+    setHistory(myRecords);
+    setLabs(myLabs);
+    setReferrals(resolvedReferrals);
+    setFollowups(resolvedFollowups);
+    setEmergencies(myEmergencies);
+    setPatientName(recordName || appointmentName || ashaName);
   }
 
-  /** Fallback name resolution from ASHA registrations (they carry phone). */
-  function nameFromAsha(cleaned: string): string {
-    return (
-      getAshaPatients().find((patient) => patient.phone === cleaned)?.name ?? ""
-    );
+  /** Full lab-order store read (for the phone-variant fallback). */
+  function getLabOrdersByPhoneAny(_phone: string): LabOrder[] {
+    // getLabOrdersByPhone already covers "phone"; this re-reads the raw
+    // store so recordsForPhone can check mobile/patientPhone variants.
+    const raw = window.localStorage.getItem("swasthya_lab_orders");
+    if (!raw) return [];
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      return Array.isArray(parsed) ? (parsed as LabOrder[]) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /** Full emergency store read (for the phone-variant fallback). */
+  function getEmergenciesAny(): Emergency[] {
+    const raw = window.localStorage.getItem("swasthya_emergencies");
+    if (!raw) return [];
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      return Array.isArray(parsed) ? (parsed as Emergency[]) : [];
+    } catch {
+      return [];
+    }
   }
 
   function formatLongDate(dateStr: string): string {
@@ -115,7 +192,9 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
   const activeReferrals = referrals.filter(
     (referral) => referral.status !== "Completed"
   );
+  const pendingLabs = labs.filter((order) => order.status === "Pending");
   const hasAnyData =
+    appointments.length > 0 ||
     history.length > 0 ||
     labs.length > 0 ||
     activeReferrals.length > 0 ||
@@ -204,6 +283,55 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
               👤 {patientName} · 📞 {phone}
             </p>
           )}
+
+          {/* Appointments */}
+          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-blue-700" />
+              <h2 className="text-sm font-extrabold text-slate-800">
+                {t.myRecords.appointmentsSection}
+              </h2>
+              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-black text-blue-800 ring-1 ring-blue-200">
+                {appointments.length}
+              </span>
+            </div>
+            {appointments.length === 0 ? (
+              <p className="mt-3 text-xs font-semibold text-slate-400">
+                {t.myRecords.noAppointments}
+              </p>
+            ) : (
+              <ul className="mt-4 space-y-2">
+                {appointments.map((appointment) => (
+                  <li
+                    key={appointment.id}
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-blue-50/60 px-4 py-3 ring-1 ring-blue-100"
+                  >
+                    <CalendarDays className="h-4 w-4 shrink-0 text-blue-700" />
+                    <span className="text-sm font-extrabold text-slate-800">
+                      {formatLongDate(appointment.date)} · {appointment.time}
+                    </span>
+                    <span className="text-xs font-bold text-slate-600">
+                      {getFacilityById(appointment.facility)?.name ?? appointment.facility}
+                    </span>
+                    <span className="rounded-lg bg-blue-50 px-1.5 py-0.5 text-xs font-black text-blue-800 ring-1 ring-blue-200">
+                      #{appointment.queueNumber}
+                    </span>
+                    <span
+                      className={`ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ring-1 ${
+                        appointment.status === "Waiting"
+                          ? "bg-amber-50 text-amber-800 ring-amber-200"
+                          : "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                      }`}
+                    >
+                      {appointment.status === "Waiting"
+                        ? t.appointments.statusWaiting
+                        : t.appointments.statusCompleted}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
 
           {/* Past visits + prescriptions */}
           <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -315,6 +443,11 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
               <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-black text-sky-800 ring-1 ring-sky-200">
                 {labs.length}
               </span>
+              {pendingLabs.length > 0 && (
+                <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-black text-amber-800 ring-1 ring-amber-200">
+                  {pendingLabs.length} {t.myRecords.labStatusPending}
+                </span>
+              )}
             </div>
             {labs.length === 0 ? (
               <p className="mt-3 text-xs font-semibold text-slate-400">
@@ -402,27 +535,52 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
             )}
           </section>
 
-          {/* Emergency history (read-only context) */}
-          {emergencies.length > 0 && (
-            <section className="rounded-3xl bg-red-50/60 p-6 ring-1 ring-red-200">
-              <div className="flex items-center gap-2">
-                <span aria-hidden="true">🚨</span>
-                <h2 className="text-sm font-extrabold text-red-800">
-                  {t.escalation.title}
-                </h2>
-              </div>
-              <ul className="mt-3 space-y-1.5">
+          {/* Emergency escalations */}
+          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <div className="flex items-center gap-2">
+              <span aria-hidden="true">🚨</span>
+              <h2 className="text-sm font-extrabold text-slate-800">
+                {t.myRecords.emergenciesSection}
+              </h2>
+              <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-black text-red-700 ring-1 ring-red-200">
+                {emergencies.length}
+              </span>
+            </div>
+            {emergencies.length === 0 ? (
+              <p className="mt-3 text-xs font-semibold text-slate-400">
+                {t.myRecords.noEmergencies}
+              </p>
+            ) : (
+              <ul className="mt-4 space-y-1.5">
                 {emergencies.map((emergency) => (
-                  <li key={emergency.id} className="text-xs font-bold text-red-700">
-                    {new Date(emergency.timestamp).toLocaleString(
-                      lang === "hi" ? "hi-IN" : "en-IN"
-                    )}{" "}
-                    · {emergency.symptoms}
+                  <li
+                    key={emergency.id}
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-red-50/60 px-4 py-2.5 ring-1 ring-red-100"
+                  >
+                    <span className="text-xs font-bold text-red-700">
+                      {new Date(emergency.timestamp).toLocaleString(
+                        lang === "hi" ? "hi-IN" : "en-IN"
+                      )}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-600">
+                      {emergency.symptoms}
+                    </span>
+                    <span
+                      className={`ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-extrabold ring-1 ${
+                        emergency.status === "escalated"
+                          ? "bg-red-50 text-red-700 ring-red-200"
+                          : "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                      }`}
+                    >
+                      {emergency.status === "escalated"
+                        ? t.escalation.statusEscalated
+                        : t.escalation.statusResolved}
+                    </span>
                   </li>
                 ))}
               </ul>
-            </section>
-          )}
+            )}
+          </section>
         </div>
       )}
     </div>
