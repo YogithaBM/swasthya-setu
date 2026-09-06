@@ -224,6 +224,7 @@ export interface Translation {
     description: string;
     queueTitle: string;
     queueSub: string;
+    queueEmpty: string;
     waitingWord: string;
     minutesUnit: string;
     emptyTitle: string;
@@ -266,6 +267,10 @@ export interface Translation {
     qrText: string;
     print: string;
     sendToPatient: string;
+    sending: string;
+    sent: string;
+    /** "Prescription sent to {name}" — name is substituted at render time. */
+    sentToastNamed: string;
     sentToast: string;
     newPrescription: string;
     markCompleted: string;
@@ -297,6 +302,12 @@ export interface Translation {
     statusToday: string;
     statusUpcoming: string;
     noFollowups: string;
+  };
+  /** Shared label strings for "Completed" across the doctor panel and pages. */
+  common: {
+    completedStatus: string;
+    completedToday: string;
+    noCompletedYet: string;
   };
   referrals: {
     badge: string;
@@ -614,6 +625,7 @@ export const translations: Record<Language, Translation> = {
       description: "Manage the patient queue and issue digital prescriptions.",
       queueTitle: "Patient Queue",
       queueSub: "Emergency first, then attention and safe cases",
+      queueEmpty: "No waiting patients — the queue is clear.",
       waitingWord: "waiting",
       minutesUnit: "min",
       emptyTitle: "Select a Patient",
@@ -656,6 +668,9 @@ export const translations: Record<Language, Translation> = {
       qrText: "Scan for digital copy",
       print: "Print",
       sendToPatient: "Send to Patient",
+      sending: "Sending...",
+      sent: "✓ Sent",
+      sentToastNamed: "Prescription sent to {name}",
       sentToast: "Prescription sent to patient's phone",
       newPrescription: "New Prescription",
       markCompleted: "Mark Completed",
@@ -743,6 +758,11 @@ export const translations: Record<Language, Translation> = {
       statusToday: "Due Today",
       statusUpcoming: "Upcoming",
       noFollowups: "No follow-ups scheduled yet. Schedule one from the doctor panel.",
+    },
+    common: {
+      completedStatus: "Completed",
+      completedToday: "Completed Today",
+      noCompletedYet: "No patients completed yet today.",
     },
     referrals: {
       badge: "Referral Tracking",
@@ -1003,6 +1023,7 @@ export const translations: Record<Language, Translation> = {
       description: "मरीज़ों की कतार प्रबंधित करें और डिजिटल प्रिस्क्रिप्शन जारी करें।",
       queueTitle: "मरीज़ कतार",
       queueSub: "पहले आपातकाल, फिर ध्यान देने योग्य और सुरक्षित मामले",
+      queueEmpty: "कोई प्रतीक्षारत मरीज़ नहीं — कतार खाली है।",
       waitingWord: "प्रतीक्षा",
       minutesUnit: "मिनट",
       emptyTitle: "मरीज़ चुनें",
@@ -1045,6 +1066,9 @@ export const translations: Record<Language, Translation> = {
       qrText: "डिजिटल कॉपी के लिए स्कैन करें",
       print: "प्रिंट करें",
       sendToPatient: "मरीज़ को भेजें",
+      sending: "भेजा जा रहा है...",
+      sent: "✓ भेजा गया",
+      sentToastNamed: "{name} को प्रिस्क्रिप्शन भेज दिया गया",
       sentToast: "प्रिस्क्रिप्शन मरीज़ के फ़ोन पर भेज दिया गया",
       newPrescription: "नई प्रिस्क्रिप्शन",
       markCompleted: "पूर्ण करें",
@@ -1134,6 +1158,11 @@ export const translations: Record<Language, Translation> = {
       statusToday: "आज नियत",
       statusUpcoming: "आगामी",
       noFollowups: "अभी कोई फॉलो-अप शेड्यूल नहीं है। डॉक्टर पैनल से शेड्यूल करें।",
+    },
+    common: {
+      completedStatus: "पूर्ण",
+      completedToday: "आज पूर्ण",
+      noCompletedYet: "अभी आज कोई मरीज़ पूर्ण नहीं हुआ।",
     },
     referrals: {
       badge: "रेफ़रल ट्रैकिंग",

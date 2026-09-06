@@ -19,6 +19,8 @@ export interface StoredAppointment {
   time: string;
   /** 10-digit Indian mobile (optional — set when the patient books). */
   phone?: string;
+  /** Local YYYY-MM-DD on which the appointment was completed (set by the doctor panel). */
+  completedAt?: string;
   queueNumber: number;
   status: AppointmentStatus;
   severity: TriageSeverity;
@@ -118,6 +120,14 @@ function isStoredAppointment(value: unknown): value is StoredAppointment {
   );
 }
 
+/** Local YYYY-MM-DD (no UTC drift — matches how the pages compute "today"). */
+export function localToday(): string {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
 /** Read the shared appointment store, falling back to the hardcoded samples. */
 export function getAppointments(): StoredAppointment[] {
   if (typeof window === "undefined") return SAMPLE_APPOINTMENTS;
@@ -143,14 +153,33 @@ export function addAppointment(appointment: StoredAppointment): void {
   );
 }
 
-/** Flip an appointment's status (used when a doctor completes a patient). */
+/**
+ * Flip an appointment's status (used when a doctor completes a patient).
+ * Completion stamps the local date so "completed today" lists survive reloads.
+ */
 export function updateAppointmentStatus(
   id: string,
   status: AppointmentStatus
 ): void {
   if (typeof window === "undefined") return;
   const current = getAppointments().map((appointment) =>
-    appointment.id === id ? { ...appointment, status } : appointment
+    appointment.id === id
+      ? {
+          ...appointment,
+          status,
+          completedAt:
+            status === "Completed"
+              ? (appointment.completedAt ?? localToday())
+              : undefined,
+        }
+      : appointment
   );
   window.localStorage.setItem(APPOINTMENTS_STORAGE_KEY, JSON.stringify(current));
+}
+
+/** Appointments completed on the given local date (newest stamp first). */
+export function getCompletedOn(date: string): StoredAppointment[] {
+  return getAppointments().filter(
+    (appointment) => appointment.status === "Completed" && appointment.completedAt === date
+  );
 }
