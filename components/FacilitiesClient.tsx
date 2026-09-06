@@ -109,7 +109,7 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Map card */}
-      <div className="mt-8 rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200 md:p-6">
+      <div className="mt-8 glass-card p-4 md:p-6">
         <div className="flex items-start justify-between gap-4 px-2 pb-4 pt-1">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
@@ -145,7 +145,7 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Table card */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">

@@ -5,6 +5,10 @@ import { usePathname, useRouter } from "next/navigation";
 
 import TopNav from "@/components/TopNav";
 import {
+  applyThemeClass,
+  getTheme,
+} from "@/lib/theme";
+import {
   canAccess,
   clearRole,
   getRole,
@@ -32,6 +36,10 @@ export default function AppShell({
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // Ensure <html class="dark"> matches storage even if the boot script
+    // didn't run (e.g. client-side navigation from an external entry).
+    applyThemeClass(getTheme());
+
     const current = getRole();
     setRole(current);
 
@@ -54,8 +62,9 @@ export default function AppShell({
 
   if (!ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-700 border-t-transparent" />
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <div className="h-12 w-12 animate-pulse rounded-2xl bg-teal-500/70" />
+        <div className="skeleton h-3 w-32" />
         <span className="sr-only">Loading…</span>
       </div>
     );

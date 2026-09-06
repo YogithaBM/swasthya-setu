@@ -194,7 +194,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
       {toast && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-extrabold text-white shadow-xl"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-emerald-700 dark:text-emerald-300"
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {toast}
@@ -218,7 +218,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[440px_1fr]">
         {/* Registration form */}
-        <section className="h-fit rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 lg:sticky lg:top-6 md:p-8">
+        <section className="h-fit glass-card p-6 lg:sticky lg:top-6 md:p-8">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
               <ClipboardPlus className="h-6 w-6" />
@@ -347,7 +347,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
         </section>
 
         {/* My Patients */}
-        <section className="min-w-0 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+        <section className="min-w-0 glass-card p-6 md:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">

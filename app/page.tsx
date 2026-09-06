@@ -3,110 +3,147 @@ import {
   ArrowRight,
   BedDouble,
   Building2,
+  CalendarDays,
   HeartPulse,
+  Stethoscope,
+  Users,
 } from "lucide-react";
 
 import { availableBeds, facilities, totalBeds } from "@/lib/data";
+import { getAppointments } from "@/lib/appointments";
 import { getLang } from "@/lib/lang";
 import { getTranslations } from "@/lib/translations";
 
 export default function HomePage() {
-  const t = getTranslations(getLang());
+  const lang = getLang();
+  const t = getTranslations(lang);
 
   const networkTotalBeds = facilities.reduce((sum, f) => sum + totalBeds(f), 0);
   const networkAvailableBeds = facilities.reduce((sum, f) => sum + availableBeds(f), 0);
-  const totalDoctors = facilities.reduce((sum, f) => sum + f.doctorCount, 0);
-
-  const stats = [
-    { value: String(facilities.length), label: t.stats.facilities },
-    { value: String(networkTotalBeds), label: t.stats.beds },
-    { value: String(networkAvailableBeds), label: t.stats.availableBeds },
-    { value: String(totalDoctors), label: t.stats.doctors },
-  ];
+  const todayStr = new Date().toLocaleDateString("en-CA");
+  const appointmentsToday = getAppointments().filter(
+    (appointment) => !appointment.date || appointment.date === todayStr
+  ).length;
+  const patientsServed = 247;
 
   return (
     <div className="min-h-full">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-emerald-800 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-blue-800 text-white">
+        {/* Soft mesh blobs */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl"
+          className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-teal-400/30 blur-3xl"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
+          className="pointer-events-none absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-blue-400/25 blur-3xl"
         />
+        {/* Faint medical-cross watermark */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-[8%] top-1/2 -translate-y-1/2 select-none font-black text-white/[0.06]"
+          style={{ fontSize: "22rem", lineHeight: 1 }}
+        >
+          ✚
+        </div>
+
         <div className="relative mx-auto max-w-5xl px-6 py-16 text-center md:py-24">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-50">
-            <HeartPulse className="h-4 w-4 text-emerald-300" />
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-teal-50 backdrop-blur">
+            <HeartPulse className="h-4 w-4 text-teal-300" />
             {t.heroBadge}
           </span>
-          <h1 className="mt-6 text-4xl font-extrabold tracking-tight md:text-6xl">
+          <h1 className="mt-6 text-4xl font-bold tracking-tight md:text-6xl">
             {t.appName}
+            <span className="mt-2 block text-2xl font-bold text-teal-100 md:text-4xl">
+              {t.appNameRoman} — ग्रामीण स्वास्थ्य सेतु
+            </span>
           </h1>
-          <p className="mt-3 text-lg font-semibold text-blue-100 md:text-2xl">
-            {t.appNameRoman} <span className="mx-1 text-emerald-300">·</span> Health Bridge
-          </p>
-          <p className="mx-auto mt-6 max-w-2xl text-base text-blue-100/90 md:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base font-normal text-teal-50/85 md:text-lg">
             {t.tagline}
           </p>
 
-          <Link
-            href="/login"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-emerald-500 px-8 py-4 text-base font-extrabold text-white shadow-lg shadow-emerald-950/30 transition hover:-translate-y-0.5 hover:bg-emerald-400 md:text-lg"
-          >
-            {t.getStarted}
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-br from-teal-400 to-teal-500 px-8 py-4 text-base font-extrabold text-white shadow-lg shadow-teal-950/40 transition hover:-translate-y-0.5 hover:brightness-105 md:text-lg"
+            >
+              <Stethoscope className="h-5 w-5" />
+              {lang === "hi" ? "मैं मरीज़ हूँ" : "I am a Patient"}
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-teal-300/80 bg-white/5 px-8 py-4 text-base font-extrabold text-teal-50 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/15 md:text-lg"
+            >
+              <Users className="h-5 w-5" />
+              {lang === "hi" ? "मैं डॉक्टर हूँ" : "I am a Doctor"}
+            </Link>
+          </div>
 
-          <div className="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-2xl border border-white/10 bg-white/10 px-4 py-4 backdrop-blur"
-              >
-                <p className="text-2xl font-extrabold md:text-3xl">{stat.value}</p>
-                <p className="mt-1 text-xs font-medium text-blue-100">{stat.label}</p>
+          {/* Glass stat cards */}
+          <div className="mx-auto mt-12 grid max-w-3xl gap-4 sm:grid-cols-3">
+            <div className="glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100" style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
+              <div className="flex items-center justify-center gap-3">
+                <Building2 className="h-6 w-6 text-teal-300" />
+                <p className="text-3xl font-extrabold">{facilities.length}</p>
               </div>
-            ))}
+              <p className="mt-1 text-xs font-medium text-teal-50/85">{t.stats.facilities}</p>
+            </div>
+            <div className="glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100" style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
+              <div className="flex items-center justify-center gap-3">
+                <Users className="h-6 w-6 text-teal-300" />
+                <p className="text-3xl font-extrabold">{patientsServed}</p>
+              </div>
+              <p className="mt-1 text-xs font-medium text-teal-50/85">{t.stats.patientsServed}</p>
+            </div>
+            <div className="glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100" style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
+              <div className="flex items-center justify-center gap-3">
+                <CalendarDays className="h-6 w-6 text-teal-300" />
+                <p className="text-3xl font-extrabold">{appointmentsToday}</p>
+              </div>
+              <p className="mt-1 text-xs font-medium text-teal-50/85">{t.stats.appointmentsToday}</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Network coverage */}
-      <section className="mx-auto max-w-5xl px-6 pb-16">
-        <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <section className="mx-auto max-w-5xl px-6 py-14">
+        <div className="glass-card p-6 md:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-300">
               <Building2 className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-slate-800 md:text-xl">
+              <h2 className="text-lg font-bold tracking-tight text-slate-800 dark:text-slate-100 md:text-xl">
                 {t.networkCoverage}
               </h2>
-              <p className="text-sm text-slate-500">{t.networkCoverageSub}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {t.networkCoverageSub}
+              </p>
             </div>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {facilities.map((facility) => (
               <div
                 key={facility.id}
-                className="flex items-center gap-3 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-100"
+                className="surface-soft lift-hover flex items-center gap-3 rounded-2xl p-4 ring-1 ring-slate-900/5 dark:ring-white/10"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-700">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-500/15 text-teal-600 dark:text-teal-300">
                   <BedDouble className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-slate-800">
+                  <p className="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
                     {facility.name}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     {t.levels[facility.level]} · {facility.district}
                   </p>
                 </div>
                 <span
                   title={`${t.stats.availableBeds}: ${availableBeds(facility)} / ${totalBeds(facility)}`}
-                  className="ml-auto shrink-0 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700"
+                  className="ml-auto shrink-0 rounded-full bg-teal-500/15 px-2.5 py-1 text-[11px] font-bold text-teal-700 dark:text-teal-300"
                 >
                   {availableBeds(facility)}/{totalBeds(facility)}
                 </span>
@@ -116,7 +153,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-400">
+      <footer className="border-t border-slate-900/10 py-6 text-center text-xs font-medium text-slate-500 dark:border-white/10 dark:text-slate-400">
         {t.footer}
       </footer>
     </div>

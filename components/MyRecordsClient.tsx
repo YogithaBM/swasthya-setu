@@ -207,7 +207,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
       {phoneError && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 py-3 text-center text-sm font-extrabold text-white shadow-xl"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-red-600 dark:text-red-400"
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {phoneError}
@@ -230,7 +230,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Phone lookup card */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <label className="block">
           <span className="text-sm font-bold text-slate-600">
             {t.myRecords.phoneLabel}
@@ -285,7 +285,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           )}
 
           {/* Appointments */}
-          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4 text-blue-700" />
               <h2 className="text-sm font-extrabold text-slate-800">
@@ -334,7 +334,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Past visits + prescriptions */}
-          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-blue-700" />
               <h2 className="text-sm font-extrabold text-slate-800">
@@ -396,7 +396,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Upcoming follow-ups */}
-          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-2">
               <CalendarClock className="h-4 w-4 text-blue-700" />
               <h2 className="text-sm font-extrabold text-slate-800">
@@ -434,7 +434,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Lab tests */}
-          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-2">
               <Microscope className="h-4 w-4 text-sky-700" />
               <h2 className="text-sm font-extrabold text-slate-800">
@@ -490,7 +490,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Active referrals */}
-          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-2">
               <ArrowLeftRight className="h-4 w-4 text-red-600" />
               <h2 className="text-sm font-extrabold text-slate-800">
@@ -536,7 +536,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Emergency escalations */}
-          <section className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <section className="glass-card p-6">
             <div className="flex items-center gap-2">
               <span aria-hidden="true">🚨</span>
               <h2 className="text-sm font-extrabold text-slate-800">

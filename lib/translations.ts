@@ -10,6 +10,7 @@ export interface Translation {
   enter: string;
   getStarted: string;
   language: string;
+  theme: string;
   logout: string;
   /** Label of the language the user can switch TO (e.g. "हिन्दी" when in English). */
   switchTo: string;
@@ -74,6 +75,8 @@ export interface Translation {
     beds: string;
     availableBeds: string;
     doctors: string;
+    patientsServed: string;
+    appointmentsToday: string;
   };
   levels: {
     sub_centre: string;
@@ -439,6 +442,7 @@ export const translations: Record<Language, Translation> = {
     enter: "Enter",
     getStarted: "Get Started",
     language: "Language",
+    theme: "Theme",
     logout: "Logout",
     switchTo: "हिन्दी",
     backHome: "Back to Home",
@@ -514,6 +518,8 @@ export const translations: Record<Language, Translation> = {
       beds: "Total Beds",
       availableBeds: "Available Beds",
       doctors: "Doctors",
+      patientsServed: "Patients Served",
+      appointmentsToday: "Appointments Today",
     },
     levels: {
       sub_centre: "Sub-Centre",
@@ -523,7 +529,7 @@ export const translations: Record<Language, Translation> = {
     },
     networkCoverage: "Network Coverage",
     networkCoverageSub: "Our facilities across Amravati district",
-    footer: "Swasthya Setu — a health bridge for rural India",
+    footer: "© 2025 Swasthya Setu | SIH26133 | Govt. of Maharashtra",
     triage: {
       badge: "Digital Triage",
       title: "Digital Triage",
@@ -884,6 +890,7 @@ export const translations: Record<Language, Translation> = {
     enter: "प्रवेश करें",
     getStarted: "शुरू करें",
     language: "भाषा",
+    theme: "थीम",
     logout: "लॉग आउट",
     switchTo: "English",
     backHome: "होम पर वापस जाएँ",
@@ -959,6 +966,8 @@ export const translations: Record<Language, Translation> = {
       beds: "कुल बिस्तर",
       availableBeds: "उपलब्ध बिस्तर",
       doctors: "डॉक्टर",
+      patientsServed: "इलाज किए मरीज़",
+      appointmentsToday: "आज के अपॉइंटमेंट",
     },
     levels: {
       sub_centre: "उप-केंद्र",
@@ -968,7 +977,7 @@ export const translations: Record<Language, Translation> = {
     },
     networkCoverage: "नेटवर्क कवरेज",
     networkCoverageSub: "अमरावती जिले में हमारे स्वास्थ्य केंद्र",
-    footer: "स्वास्थ्य सेतु — ग्रामीण भारत के लिए स्वास्थ्य सेतु",
+    footer: "© 2025 स्वास्थ्य सेतु | SIH26133 | महाराष्ट्र शासन",
     triage: {
       badge: "डिजिटल ट्राइएज",
       title: "रोग की जांच",

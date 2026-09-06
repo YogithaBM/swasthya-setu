@@ -443,7 +443,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
   return (
     <div className="mx-auto max-w-6xl px-6 py-10 md:py-14">
       {/* Live alert strip */}
-      <div className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 md:p-6">
+      <div className="glass-card p-5 md:p-6">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
@@ -542,7 +542,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Facility health cards */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
@@ -645,7 +645,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Patients this week — chart */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
@@ -725,7 +725,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Bed grid */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
@@ -823,7 +823,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Medicine stock table */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
@@ -890,7 +890,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
                       <span className="font-extrabold text-slate-700">{row.stock}</span>
                       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                         <div
-                          className="h-full rounded-full bg-blue-700"
+                          className="h-full rounded-full bg-teal-500"
                           style={{
                             width: `${Math.max(3, (row.stock / maxStock) * 100)}%`,
                           }}

@@ -1,5 +1,8 @@
 @import "leaflet/dist/leaflet.css";
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,9 +12,175 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+/* Smooth 300ms color transitions when the theme flips. */
+body,
+header,
+section,
+div,
+table,
+input,
+select,
+textarea,
+button {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+}
+
+/* Keep the Leaflet map out of the recolor transition. */
+.leaflet-container,
+.leaflet-container * {
+  transition: none;
+}
+
 ::selection {
-  background-color: #059669;
+  background-color: #0d9488;
   color: #ffffff;
+}
+
+body {
+  /* Light mode: almost-white → very light blue gradient. */
+  background: linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+@layer components {
+  /* ---------- Glass card (use everywhere) ---------- */
+  .glass-card {
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.7);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+  .dark .glass-card {
+    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(30, 41, 59, 0.7);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .lift-hover {
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .lift-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+  }
+  .dark .lift-hover:hover {
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ---------- Soft nested surface ---------- */
+  .surface-soft {
+    background: rgba(241, 245, 249, 0.7);
+  }
+  .dark .surface-soft {
+    background: rgba(15, 23, 42, 0.55);
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn-primary {
+    background-image: linear-gradient(to bottom right, #14b8a6, #0d9488);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+    transition: filter 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  }
+  .btn-primary:hover:not(:disabled) {
+    filter: brightness(0.94);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(13, 148, 136, 0.4);
+  }
+  .btn-secondary {
+    border: 1px solid #14b8a6;
+    color: #0d9488;
+    background: transparent;
+    transition: background-color 200ms ease, transform 200ms ease;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(20, 184, 166, 0.1);
+    transform: translateY(-1px);
+  }
+  .dark .btn-secondary {
+    color: #5eead4;
+  }
+  .btn-danger {
+    background-image: linear-gradient(to bottom right, #ef4444, #dc2626);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+    transition: filter 200ms ease, transform 200ms ease;
+  }
+  .btn-danger:hover:not(:disabled) {
+    filter: brightness(0.94);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- Focus-visible ring ---------- */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #5eead4;
+    outline-offset: 2px;
+  }
+
+  /* ---------- Skeleton shimmer ---------- */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: rgba(226, 232, 240, 0.8);
+    border-radius: 8px;
+  }
+  .dark .skeleton {
+    background: rgba(51, 65, 85, 0.8);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    animation: shimmer 1.6s infinite;
+  }
+  .dark .skeleton::after {
+    background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.18), transparent);
+  }
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* ---------- Glass toast (slide in from top) ---------- */
+  .glass-toast {
+    animation: toast-in 260ms ease;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+  .dark .glass-toast {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(30, 41, 59, 0.9);
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 /* Emergency escalation banner — pulsing red glow. */
@@ -28,7 +197,7 @@ html {
   animation: emergency-pulse 1.2s ease-in-out infinite;
 }
 
-/* When printing a prescription, show only the prescription card. */
+/* Print: only the prescription card. */
 @media print {
   body * {
     visibility: hidden !important;
@@ -46,3 +215,42 @@ html {
     box-shadow: none !important;
   }
 }
+
+/* ---------- Dark remap of legacy flat utilities ---------- */
+.dark .bg-white { background-color: #1e293b; }
+.dark .bg-slate-50 { background-color: #172033; }
+.dark .bg-slate-100 { background-color: #1e293b; }
+.dark .bg-blue-50 { background-color: rgba(13, 148, 136, 0.12); }
+.dark .bg-blue-100 { background-color: rgba(13, 148, 136, 0.2); }
+.dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.12); }
+.dark .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.2); }
+.dark .bg-sky-50 { background-color: rgba(14, 165, 233, 0.12); }
+.dark .bg-sky-100 { background-color: rgba(14, 165, 233, 0.18); }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.12); }
+.dark .bg-red-100 { background-color: rgba(239, 68, 68, 0.18); }
+.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.12); }
+.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.18); }
+.dark .text-slate-800 { color: #e2e8f0; }
+.dark .text-slate-900 { color: #f1f5f9; }
+.dark .text-slate-600 { color: #cbd5e1; }
+.dark .text-slate-500 { color: #94a3b8; }
+.dark .text-slate-400 { color: #94a3b8; }
+.dark .text-blue-900 { color: #e2e8f0; }
+.dark .text-blue-800 { color: #5eead4; }
+.dark .text-blue-700 { color: #2dd4bf; }
+.dark .text-emerald-700 { color: #34d399; }
+.dark .text-emerald-600 { color: #34d399; }
+.dark .text-sky-800 { color: #7dd3fc; }
+.dark .text-sky-700 { color: #7dd3fc; }
+.dark .text-red-700 { color: #fca5a5; }
+.dark .text-red-600 { color: #fca5a5; }
+.dark .text-amber-800 { color: #fcd34d; }
+.dark .text-amber-600 { color: #fbbf24; }
+.dark .ring-slate-200 { --tw-ring-color: rgba(148, 163, 184, 0.18); }
+.dark .ring-blue-200 { --tw-ring-color: rgba(45, 212, 191, 0.25); }
+.dark .ring-emerald-200 { --tw-ring-color: rgba(52, 211, 153, 0.25); }
+.dark .ring-red-200 { --tw-ring-color: rgba(252, 165, 165, 0.25); }
+.dark .ring-sky-200 { --tw-ring-color: rgba(125, 211, 252, 0.25); }
+.dark .ring-amber-200 { --tw-ring-color: rgba(252, 211, 77, 0.25); }
+.dark .border-slate-200 { border-color: rgba(148, 163, 184, 0.18); }
+.dark .border-slate-100 { border-color: rgba(148, 163, 184, 0.12); }

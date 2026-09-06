@@ -104,7 +104,7 @@ export default function FollowupClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Table */}
-      <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-6 glass-card p-6 md:p-8">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>

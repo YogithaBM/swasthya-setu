@@ -150,7 +150,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Input card */}
-      <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="glass-card mt-6 p-6 md:p-8">
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
             <Stethoscope className="h-6 w-6" />
@@ -187,7 +187,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
           type="button"
           onClick={handleSubmit}
           disabled={!symptoms.trim() || loading}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-800 px-8 py-3.5 text-base font-bold text-white shadow-lg shadow-blue-800/25 transition hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="btn-primary mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
         >
           {loading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -198,25 +198,24 @@ export default function TriageClient({ lang }: { lang: Language }) {
         </button>
       </div>
 
-      {/* Loading state */}
+      {/* Loading state — skeleton shimmer */}
       {loading && (
-        <div className="mt-8 rounded-3xl border-2 border-dashed border-blue-200 bg-white p-10 text-center">
-          <Loader2 className="mx-auto h-10 w-10 animate-spin text-blue-800" />
-          <p className="mt-4 text-lg font-extrabold text-slate-800">
+        <div className="glass-card mt-8 p-10 text-center">
+          <p className="text-lg font-extrabold text-slate-800 dark:text-slate-100">
             {t.triage.loadingTitle}
           </p>
-          <p className="text-sm text-slate-500">{t.triage.loadingSub}</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t.triage.loadingSub}</p>
           <div className="mx-auto mt-6 max-w-md space-y-2.5">
-            <div className="h-3 animate-pulse rounded-full bg-slate-200" />
-            <div className="h-3 w-4/5 animate-pulse rounded-full bg-slate-200" />
-            <div className="h-3 w-3/5 animate-pulse rounded-full bg-slate-200" />
+            <div className="skeleton h-3 w-full" />
+            <div className="skeleton h-3 w-4/5" />
+            <div className="skeleton h-3 w-3/5" />
           </div>
         </div>
       )}
 
       {/* Error state */}
       {error && !loading && (
-        <div className="mt-8 rounded-3xl bg-red-50 p-6 ring-1 ring-red-200">
+        <div className="glass-card mt-8 bg-red-50/80 p-6 dark:bg-red-950/40">
           <p className="font-extrabold text-red-700">{t.triage.errorTitle}</p>
           <p className="mt-1 text-sm text-red-600">{error}</p>
         </div>
@@ -251,10 +250,9 @@ export default function TriageClient({ lang }: { lang: Language }) {
 
           <TriageResult result={result.result} source={result.source} lang={lang} />
 
-          <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
+          <div className="glass-card mt-6 p-6 md:p-8">                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-300">
                   <Hospital className="h-6 w-6" />
                 </div>
                 <div>
@@ -270,11 +268,11 @@ export default function TriageClient({ lang }: { lang: Language }) {
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
+                <span className="rounded-full bg-teal-500/15 px-3 py-1 text-xs font-bold text-teal-700 dark:text-teal-300">
                   {availableBeds(recommendedFacility)}/{totalBeds(recommendedFacility)}{" "}
                   {t.triage.bedsAvailable}
                 </span>
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800 ring-1 ring-blue-200">
+                <span className="rounded-full bg-sky-500/15 px-3 py-1 text-xs font-bold text-sky-700 dark:text-sky-300">
                   {recommendedFacility.doctorCount} {t.stats.doctors}
                 </span>
               </div>
@@ -286,7 +284,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
                 return (
                   <div
                     key={category}
-                    className="flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3 ring-1 ring-slate-100"
+                    className="surface-soft flex items-center justify-between rounded-xl px-4 py-3 ring-1 ring-slate-900/5 dark:ring-white/10"
                   >
                     <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       <BedDouble className="h-4 w-4 text-blue-700" />
@@ -303,7 +301,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
 
             <Link
               href="/appointments"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3.5 font-extrabold text-white shadow-lg shadow-emerald-600/25 transition hover:bg-emerald-700 sm:w-auto"
+              className="btn-primary mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-extrabold sm:w-auto"
             >
               <CalendarPlus className="h-5 w-5" />
               {t.triage.bookAppointment}

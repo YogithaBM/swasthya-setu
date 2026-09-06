@@ -66,7 +66,7 @@ export default function ReferralsClient({ lang }: { lang: Language }) {
       {toast && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-center text-sm font-extrabold text-white shadow-xl"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-emerald-700 dark:text-emerald-300"
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {toast}
@@ -102,7 +102,7 @@ export default function ReferralsClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Table */}
-      <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-6 glass-card p-6 md:p-8">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>

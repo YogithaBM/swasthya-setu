@@ -287,7 +287,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
           event.preventDefault();
           handleBook();
         }}
-        className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8"
+        className="mt-8 glass-card p-6 md:p-8"
       >
         <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
@@ -534,7 +534,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
       )}
 
       {/* Today's appointments */}
-      <div className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
+      <div className="mt-8 glass-card p-6 md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">

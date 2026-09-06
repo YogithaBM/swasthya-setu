@@ -119,7 +119,7 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
   const hint = isDoctor ? t.login.pinHint : t.login.ashaPinHint;
 
   return (
-    <div className="flex flex-col rounded-3xl bg-white p-7 shadow-sm ring-1 ring-slate-200 transition hover:shadow-xl md:p-8">
+    <div className="glass-card lift-hover flex flex-col p-7 md:p-8">
       <div
         className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
           isDoctor
@@ -240,7 +240,7 @@ export default function LoginClient({ lang }: { lang: Language }) {
 
         <div className="relative w-full text-center">
           {/* Brand */}
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-800 to-emerald-600 shadow-lg shadow-blue-900/20">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-lg shadow-teal-600/30">
             <HeartPulse className="h-7 w-7 text-white" />
           </span>
           <h2 className="mt-4 text-2xl font-extrabold text-slate-800">
@@ -269,7 +269,7 @@ export default function LoginClient({ lang }: { lang: Language }) {
         {/* Role cards */}
         <div className="relative mt-10 grid w-full gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Patient card */}
-          <div className="flex flex-col rounded-3xl bg-white p-7 shadow-sm ring-1 ring-slate-200 transition hover:shadow-xl md:p-8">
+          <div className="glass-card lift-hover flex flex-col p-7 md:p-8">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-800">
               <UserRound className="h-7 w-7" />
             </div>

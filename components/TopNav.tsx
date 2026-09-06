@@ -17,14 +17,17 @@ import {
   LogOut,
   Menu,
   Microscope,
+  Moon,
   Siren,
   Stethoscope,
+  Sun,
   UserRound,
   X,
   type LucideIcon,
 } from "lucide-react";
 
 import { NAV_ROUTES, type Role } from "@/lib/auth";
+import { useTheme } from "@/lib/theme";
 import {
   getTranslations,
   translations,
@@ -38,7 +41,6 @@ interface NavEntry {
   icon: LucideIcon;
 }
 
-/** All possible destinations; each role only sees the subset it may visit. */
 const NAV_BY_HREF: Record<string, Omit<NavEntry, "href">> = {
   "/": { labelKey: "home", icon: Home },
   "/triage": { labelKey: "triage", icon: Stethoscope },
@@ -76,11 +78,11 @@ export default function TopNav({
 }) {
   const pathname = usePathname();
   const t = getTranslations(lang);
+  const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement | null>(null);
 
-  // Nav links follow the role's route order (Home first, then role pages).
   const items: NavEntry[] = NAV_ROUTES[role]
     .map((href) => {
       const entry = NAV_BY_HREF[href];
@@ -88,9 +90,7 @@ export default function TopNav({
     })
     .filter((entry): entry is NavEntry => Boolean(entry));
 
-  /** Links shown inline on desktop (Home/Doctor/Facilities/Availability…). */
   const topItems = items.filter((item) => TOP_LEVEL_HREFS.has(item.href));
-  /** Links folded into the "More ▾" dropdown on desktop (doctor overflow). */
   const moreItems = items.filter((item) => !TOP_LEVEL_HREFS.has(item.href));
   const moreActive = moreItems.some((item) => pathname === item.href);
 
@@ -125,38 +125,38 @@ export default function TopNav({
   }
 
   const linkClass = (isActive: boolean) =>
-    `flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-semibold transition ${
+    `flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold transition ${
       isActive
-        ? "bg-white/15 text-white"
-        : "text-blue-100/85 hover:bg-white/10 hover:text-white"
+        ? "bg-teal-500/90 text-white shadow-sm shadow-teal-500/30"
+        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white"
     }`;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 bg-blue-800 text-white shadow-lg shadow-blue-950/20">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-white/40 bg-white/70 shadow-md shadow-slate-900/5 backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/70 dark:shadow-black/30">
       <div className="flex h-16 items-center gap-3 px-4 md:px-6">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 shadow-md shadow-blue-950/30">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-md shadow-teal-600/30">
             <HeartPulse className="h-5 w-5 text-white" />
           </span>
           <span className="leading-tight">
-            <span className="block text-base font-extrabold leading-none">
+            <span className="block text-base font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
               {t.appName}
             </span>
-            <span className="mt-0.5 hidden text-[10px] font-medium tracking-wide text-blue-200 sm:block">
+            <span className="mt-0.5 hidden text-[10px] font-medium tracking-wide text-slate-500 sm:block dark:text-slate-400">
               {t.appNameRoman} · Health Bridge
             </span>
           </span>
         </Link>
 
-        {/* Center nav links (desktop) — inline items + "More ▾" for the rest */}
+        {/* Center nav links (desktop) — inline + "More ▾" for the rest */}
         <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex">
           {topItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
               <Link key={item.href} href={item.href} className={linkClass(isActive)}>
-                <Icon className="h-4 w-4" />
+                <Icon className={`h-4 w-4 ${isActive ? "" : "text-slate-600 dark:text-slate-400"}`} />
                 {t.nav[item.labelKey]}
               </Link>
             );
@@ -179,7 +179,7 @@ export default function TopNav({
               {moreOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl bg-white py-1.5 shadow-xl ring-1 ring-slate-200"
+                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-2xl bg-white/90 py-1.5 shadow-xl ring-1 ring-slate-200 backdrop-blur-xl dark:bg-slate-800/95 dark:ring-white/10"
                 >
                   {moreItems.map((item) => {
                     const Icon = item.icon;
@@ -191,11 +191,11 @@ export default function TopNav({
                         role="menuitem"
                         className={`flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition ${
                           isActive
-                            ? "bg-blue-50 text-blue-800"
-                            : "text-slate-700 hover:bg-slate-50"
+                            ? "bg-teal-50 text-teal-800 dark:bg-teal-500/10 dark:text-teal-300"
+                            : "text-slate-700 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-white/5"
                         }`}
                       >
-                        <Icon className={`h-4 w-4 ${isActive ? "text-blue-800" : "text-slate-400"}`} />
+                        <Icon className={`h-4 w-4 ${isActive ? "text-teal-700 dark:text-teal-300" : "text-slate-400"}`} />
                         {t.nav[item.labelKey]}
                       </Link>
                     );
@@ -211,19 +211,34 @@ export default function TopNav({
           {role === "doctor" && (
             <span
               title={t.doctor.doctorLabel}
-              className="hidden items-center gap-1.5 rounded-full bg-emerald-500/20 px-3 py-1.5 text-xs font-bold text-emerald-100 ring-1 ring-emerald-400/40 sm:inline-flex"
+              className="hidden items-center gap-1.5 rounded-full bg-teal-500/15 px-3 py-1.5 text-xs font-bold text-teal-700 ring-1 ring-teal-500/30 sm:inline-flex dark:text-teal-300"
             >
               <Stethoscope className="h-3.5 w-3.5" />
               {t.doctor.doctorName}
             </span>
           )}
 
+          {/* Theme toggle — sun/moon, next to the language toggle */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={t.theme}
+            aria-label={t.theme}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-teal-300 dark:hover:bg-slate-700"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
+
           <button
             type="button"
             onClick={onLogout}
             title={t.logout}
             aria-label={t.logout}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 text-xs font-bold text-white transition hover:bg-white/20"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-slate-200 bg-white/60 px-3 text-xs font-bold text-slate-700 transition hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10"
           >
             <LogOut className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{t.logout}</span>
@@ -234,7 +249,7 @@ export default function TopNav({
             onClick={toggleLanguage}
             title={t.switchTo}
             aria-label={`${t.language}: ${lang === "hi" ? "हिन्दी" : "English"}. ${t.switchTo}`}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-white px-3.5 text-xs font-extrabold text-blue-900 shadow-sm transition hover:bg-blue-50 hover:shadow-md"
+            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 px-3.5 text-xs font-extrabold text-white shadow-md shadow-teal-600/25 transition hover:shadow-lg"
           >
             <span aria-hidden="true">🌐</span>
             {lang === "hi" ? "हिन्दी" : "English"}
@@ -246,16 +261,16 @@ export default function TopNav({
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white/20 lg:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-200 lg:hidden dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile dropdown — single-column, every item fully visible */}
+      {/* Mobile dropdown */}
       {menuOpen && (
-        <nav className="max-h-[calc(100vh-4rem)] space-y-1 overflow-y-auto border-t border-white/10 bg-blue-900 px-4 pb-4 pt-2 shadow-lg shadow-blue-950/30 lg:hidden">
+        <nav className="max-h-[calc(100vh-4rem)] space-y-1 overflow-y-auto border-t border-slate-200/70 bg-white/85 px-4 pb-4 pt-2 shadow-xl backdrop-blur-xl lg:hidden dark:border-white/10 dark:bg-slate-900/95">
           {items.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -266,14 +281,14 @@ export default function TopNav({
                 onClick={() => setMenuOpen(false)}
                 className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
                   isActive
-                    ? "bg-white/15 text-white"
-                    : "text-blue-100/85 hover:bg-white/10 hover:text-white"
+                    ? "bg-teal-500/90 text-white shadow-sm shadow-teal-500/30"
+                    : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
                 }`}
               >
                 <Icon className="h-5 w-5 shrink-0" />
                 <span className="truncate">{t.nav[item.labelKey]}</span>
                 {isActive && (
-                  <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-emerald-400" />
+                  <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-teal-400" />
                 )}
               </Link>
             );
