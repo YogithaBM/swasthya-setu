@@ -231,18 +231,21 @@ body {
 .dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.12); }
 .dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.18); }
 .dark .text-slate-800 { color: #e2e8f0; }
+.dark .text-slate-700 { color: #f1f5f9; }
 .dark .text-slate-900 { color: #f1f5f9; }
-.dark .text-slate-600 { color: #cbd5e1; }
+.dark .text-slate-600 { color: #e2e8f0; }
 .dark .text-slate-500 { color: #94a3b8; }
 .dark .text-slate-400 { color: #94a3b8; }
 .dark .text-blue-900 { color: #e2e8f0; }
 .dark .text-blue-800 { color: #5eead4; }
 .dark .text-blue-700 { color: #2dd4bf; }
 .dark .text-emerald-700 { color: #34d399; }
+.dark .text-emerald-800 { color: #6ee7b7; }
 .dark .text-emerald-600 { color: #34d399; }
 .dark .text-sky-800 { color: #7dd3fc; }
 .dark .text-sky-700 { color: #7dd3fc; }
 .dark .text-red-700 { color: #fca5a5; }
+.dark .text-red-800 { color: #fca5a5; }
 .dark .text-red-600 { color: #fca5a5; }
 .dark .text-amber-800 { color: #fcd34d; }
 .dark .text-amber-600 { color: #fbbf24; }

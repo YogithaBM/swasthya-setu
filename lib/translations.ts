@@ -86,6 +86,20 @@ export interface Translation {
   };
   networkCoverage: string;
   networkCoverageSub: string;
+  /** Home hero: primary CTA and the small staff-login link below it. */
+  bookAppointmentCta: string;
+  staffLoginLink: string;
+  /** Home page "How It Works" section. */
+  howItWorks: {
+    title: string;
+    sub: string;
+    step1Title: string;
+    step1Desc: string;
+    step2Title: string;
+    step2Desc: string;
+    step3Title: string;
+    step3Desc: string;
+  };
   footer: string;
   triage: {
     badge: string;
@@ -529,6 +543,21 @@ export const translations: Record<Language, Translation> = {
     },
     networkCoverage: "Network Coverage",
     networkCoverageSub: "Our facilities across Amravati district",
+    bookAppointmentCta: "Book Appointment",
+    staffLoginLink: "Are you a doctor? Staff Login →",
+    howItWorks: {
+      title: "How It Works",
+      sub: "From symptoms to treatment in three simple steps",
+      step1Title: "Describe Your Symptoms",
+      step1Desc:
+        "AI triage understands your complaint and recommends the right facility — sub-centre, PHC or hospital.",
+      step2Title: "Find Available Beds & Medicine",
+      step2Desc:
+        "See real-time bed and medicine availability across all 6 facilities before you travel.",
+      step3Title: "Book & Visit",
+      step3Desc:
+        "Book your slot online and get an instant queue number — no waiting in line at the counter.",
+    },
     footer: "© 2025 Swasthya Setu | SIH26133 | Govt. of Maharashtra",
     triage: {
       badge: "Digital Triage",
@@ -653,7 +682,7 @@ export const translations: Record<Language, Translation> = {
       nameMax: "Name cannot exceed 100 characters.",
       nameInvalid: "Use only letters, spaces and basic punctuation.",
       phoneRequired: "Phone number is required.",
-      phoneInvalid: "Enter exactly 10 digits starting with 6, 7, 8 or 9.",
+      phoneInvalid: "Please enter a valid 10-digit mobile number.",
       toastError: "Please fix the highlighted fields and try again.",
       confirmationTitle: "Appointment Confirmed",
       confirmationSub: "Your slot has been booked successfully",
@@ -977,6 +1006,21 @@ export const translations: Record<Language, Translation> = {
     },
     networkCoverage: "नेटवर्क कवरेज",
     networkCoverageSub: "अमरावती जिले में हमारे स्वास्थ्य केंद्र",
+    bookAppointmentCta: "अपॉइंटमेंट बुक करें",
+    staffLoginLink: "क्या आप डॉक्टर हैं? स्टाफ लॉगिन →",
+    howItWorks: {
+      title: "यह कैसे काम करता है",
+      sub: "लक्षणों से इलाज तक — तीन आसान चरण",
+      step1Title: "अपनी तकलीफ बताएं",
+      step1Desc:
+        "AI ट्राइएज आपकी शिकायत समझकर सही स्वास्थ्य केंद्र सुझाता है — उप-केंद्र, PHC या अस्पताल।",
+      step2Title: "बिस्तर और दवा उपलब्धता देखें",
+      step2Desc:
+        "जाने से पहले सभी 6 केंद्रों में बिस्तर और दवा की रीयल-टाइम उपलब्धता देखें।",
+      step3Title: "बुक करें और आएं",
+      step3Desc:
+        "ऑनलाइन स्लॉट बुक करें और तुरंत कतार नंबर पाएं — काउंटर पर लाइन में खड़े होने की ज़रूरत नहीं।",
+    },
     footer: "© 2025 स्वास्थ्य सेतु | SIH26133 | महाराष्ट्र शासन",
     triage: {
       badge: "डिजिटल ट्राइएज",
@@ -1100,7 +1144,7 @@ export const translations: Record<Language, Translation> = {
       nameMax: "नाम 100 अक्षरों से अधिक नहीं हो सकता।",
       nameInvalid: "केवल अक्षर, स्थान और बुनियादी विराम चिह्न का उपयोग करें।",
       phoneRequired: "फ़ोन नंबर आवश्यक है।",
-      phoneInvalid: "6, 7, 8 या 9 से शुरू होने वाले ठीक 10 अंक दर्ज करें।",
+      phoneInvalid: "कृपया मान्य 10 अंकों का मोबाइल नंबर दर्ज करें।",
       toastError: "हाइलाइट किए गए फ़ील्ड ठीक करके फिर कोशिश करें।",
       confirmationTitle: "अपॉइंटमेंट कन्फ़र्म हुआ",
       confirmationSub: "आपका स्लॉट सफलतापूर्वक बुक हो गया है",

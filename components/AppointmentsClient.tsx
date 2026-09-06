@@ -386,12 +386,13 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
             type="tel"
             inputMode="numeric"
             required
-            maxLength={10}
             pattern="[6-9][0-9]{9}"
             value={phone}
             onChange={(event) => {
-              // Digits only, exactly 10 characters.
-              setPhone(event.target.value.replace(/\D/g, "").slice(0, 10));
+              // Digits only — no letters, spaces or special chars. No silent
+              // truncation: an 11th digit stays in the field and fails the
+              // exactly-10 validation below (error + disabled submit).
+              setPhone(event.target.value.replace(/\D/g, ""));
               markTouched("phone");
             }}
             onBlur={() => markTouched("phone")}

@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowRight,
   HeartHandshake,
   HeartPulse,
   KeyRound,
   Lock,
   ShieldCheck,
   Stethoscope,
-  UserRound,
 } from "lucide-react";
 
 import ClientLangToggle from "@/components/ClientLangToggle";
@@ -218,17 +216,11 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
 export default function LoginClient({ lang }: { lang: Language }) {
   const t = getTranslations(lang);
   const otherTitle = translations[lang === "hi" ? "en" : "hi"].login.title;
-  const router = useRouter();
-
-  function enterAsPatient() {
-    setRole("patient");
-    router.push("/triage");
-  }
 
   return (
     <>
       <ClientLangToggle lang={lang} />
-      <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center overflow-hidden px-6 py-14">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center overflow-hidden px-4 py-14">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-200/50 blur-3xl"
@@ -266,29 +258,8 @@ export default function LoginClient({ lang }: { lang: Language }) {
           </p>
         </div>
 
-        {/* Role cards */}
-        <div className="relative mt-10 grid w-full gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Patient card */}
-          <div className="glass-card lift-hover flex flex-col p-7 md:p-8">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-800">
-              <UserRound className="h-7 w-7" />
-            </div>
-            <h3 className="mt-5 text-xl font-extrabold text-slate-800">
-              {t.login.patientTitle}
-            </h3>
-            <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-500">
-              {t.login.patientDesc}
-            </p>
-            <button
-              type="button"
-              onClick={enterAsPatient}
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-800 px-5 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-900/20 transition hover:bg-blue-900"
-            >
-              {t.login.patientCta}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-
+        {/* Staff PIN cards only — patients enter via the homepage CTA. */}
+        <div className="relative mt-10 grid w-full gap-8 md:grid-cols-2">
           <PinCard lang={lang} role="doctor" />
           <PinCard lang={lang} role="asha" />
         </div>
