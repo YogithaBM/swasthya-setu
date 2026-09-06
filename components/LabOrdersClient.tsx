@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, Microscope } from "lucide-react";
+import { CheckCircle2, FlaskConical, Microscope } from "lucide-react";
 
 import { getFacilityById } from "@/lib/data";
 import {
   getLabOrders,
-  LAB_STATUSES,
-  updateLabOrderStatus,
+  markLabOrderComplete,
   type LabOrder,
   type LabStatus,
 } from "@/lib/labOrders";
@@ -15,8 +14,7 @@ import { getTranslations, translations, type Language } from "@/lib/translations
 
 const STATUS_STYLES: Record<LabStatus, string> = {
   Pending: "bg-amber-50 text-amber-800 ring-amber-200",
-  "Sample Collected": "bg-sky-50 text-sky-800 ring-sky-200",
-  "Results Ready": "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  Completed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
 };
 
 export default function LabOrdersClient({ lang }: { lang: Language }) {
@@ -31,25 +29,21 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
 
   const statusLabel: Record<LabStatus, string> = {
     Pending: t.labOrders.statusPending,
-    "Sample Collected": t.labOrders.statusSample,
-    "Results Ready": t.labOrders.statusResults,
+    Completed: t.labOrders.statusCompleted,
   };
 
-  const counts: Record<LabStatus, number> = {
-    Pending: orders.filter((o) => o.status === "Pending").length,
-    "Sample Collected": orders.filter((o) => o.status === "Sample Collected").length,
-    "Results Ready": orders.filter((o) => o.status === "Results Ready").length,
-  };
+  const pendingCount = orders.filter((order) => order.status === "Pending").length;
+  const completedCount = orders.filter((order) => order.status === "Completed").length;
 
   function showToast(message: string) {
     setToast(message);
     window.setTimeout(() => setToast(null), 2500);
   }
 
-  function handleStatusChange(id: string, status: LabStatus) {
-    updateLabOrderStatus(id, status);
+  function handleMarkComplete(id: string) {
+    markLabOrderComplete(id);
     setOrders(getLabOrders());
-    showToast(t.labOrders.updated);
+    showToast(t.labOrders.completedToast);
   }
 
   function formatDate(dateStr: string): string {
@@ -88,19 +82,21 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Summary counts */}
-      <div className="mt-8 grid gap-3 sm:grid-cols-3">
-        {LAB_STATUSES.map((key) => (
-          <div key={key} className={`rounded-2xl p-5 ring-1 ${STATUS_STYLES[key]}`}>
-            <p className="text-3xl font-black">{counts[key]}</p>
-            <p className="mt-0.5 text-sm font-extrabold">{statusLabel[key]}</p>
-          </div>
-        ))}
+      <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        <div className="rounded-2xl bg-amber-50 p-5 text-amber-800 ring-1 ring-amber-200">
+          <p className="text-3xl font-black">{pendingCount}</p>
+          <p className="mt-0.5 text-sm font-extrabold">{t.labOrders.statusPending}</p>
+        </div>
+        <div className="rounded-2xl bg-emerald-50 p-5 text-emerald-800 ring-1 ring-emerald-200">
+          <p className="text-3xl font-black">{completedCount}</p>
+          <p className="mt-0.5 text-sm font-extrabold">{t.labOrders.statusCompleted}</p>
+        </div>
       </div>
 
       {/* Table */}
       <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-[11px] uppercase tracking-wider text-slate-400">
                 <th className="px-3 py-2.5 font-bold">{t.labOrders.colPatient}</th>
@@ -108,6 +104,7 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
                 <th className="px-3 py-2.5 font-bold">{t.labOrders.colFacility}</th>
                 <th className="px-3 py-2.5 font-bold">{t.labOrders.colDate}</th>
                 <th className="px-3 py-2.5 font-bold">{t.labOrders.colStatus}</th>
+                <th className="px-3 py-2.5 font-bold">{t.labOrders.colResult}</th>
               </tr>
             </thead>
             <tbody>
@@ -122,23 +119,16 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
                       {order.patientName}
                     </td>
                     <td className="px-3 py-3">
-                      <div className="flex max-w-xs flex-wrap gap-1">
-                        {order.tests.map((test) => (
-                          <span
-                            key={test}
-                            className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200"
-                          >
-                            <Microscope className="h-3 w-3" />
-                            {test}
-                          </span>
-                        ))}
-                      </div>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200">
+                        <Microscope className="h-3 w-3" />
+                        {order.testName}
+                      </span>
                     </td>
                     <td className="px-3 py-3 text-xs font-bold text-slate-600">
                       {facility?.name ?? order.facility}
                     </td>
                     <td className="px-3 py-3 text-xs font-bold text-slate-600">
-                      {formatDate(order.date)}
+                      {formatDate(order.dateOrdered)}
                     </td>
                     <td className="px-3 py-3">
                       <div className="flex items-center gap-2">
@@ -147,31 +137,28 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
                         >
                           {statusLabel[order.status]}
                         </span>
-                        <select
-                          value={order.status}
-                          onChange={(event) =>
-                            handleStatusChange(
-                              order.id,
-                              event.target.value as LabStatus
-                            )
-                          }
-                          aria-label={t.labOrders.colStatus}
-                          className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold text-slate-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
-                        >
-                          {LAB_STATUSES.map((status) => (
-                            <option key={status} value={status}>
-                              {statusLabel[status]}
-                            </option>
-                          ))}
-                        </select>
+                        {order.status === "Pending" && (
+                          <button
+                            type="button"
+                            onClick={() => handleMarkComplete(order.id)}
+                            title={t.labOrders.markComplete}
+                            className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1.5 text-xs font-extrabold text-white shadow-sm transition hover:bg-emerald-700"
+                          >
+                            <FlaskConical className="h-3.5 w-3.5" />
+                            {t.labOrders.markComplete}
+                          </button>
+                        )}
                       </div>
+                    </td>
+                    <td className="px-3 py-3 text-xs font-semibold text-slate-600">
+                      {order.result || "—"}
                     </td>
                   </tr>
                 );
               })}
               {orders.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-3 py-10 text-center">
+                  <td colSpan={6} className="px-3 py-10 text-center">
                     <p className="text-sm font-semibold text-slate-400">
                       {t.labOrders.noOrders}
                     </p>

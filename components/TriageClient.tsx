@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   BedDouble,
   CalendarPlus,
   Hospital,
   Loader2,
+  PhoneCall,
   Search,
+  Siren,
   Stethoscope,
 } from "lucide-react";
 
 import TriageResult from "@/components/TriageResult";
+import { addEmergency } from "@/lib/emergencies";
 import { availableBeds, facilities, totalBeds } from "@/lib/data";
 import {
   SEVERITY_EMOJI,
@@ -36,6 +39,10 @@ export default function TriageClient({ lang }: { lang: Language }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<TriageResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /** Facility the red-severity case was escalated to (set once per result). */
+  const [escalatedTo, setEscalatedTo] = useState<string | null>(null);
+  /** Guards the save against StrictMode double-invocation of the effect. */
+  const escalatedKeyRef = useRef<string | null>(null);
 
   // Prefill from the ASHA dashboard's quick-triage link (?s=<symptoms>).
   useEffect(() => {
@@ -50,6 +57,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
     setLoading(true);
     setError(null);
     setResult(null);
+    setEscalatedTo(null);
 
     try {
       const response = await fetch("/api/triage", {
@@ -78,6 +86,27 @@ export default function TriageClient({ lang }: { lang: Language }) {
   const recommendedFacility = result
     ? facilities.find((f) => f.level === result.result.facility_level)
     : undefined;
+
+  // Emergency escalation — a red-severity result is auto-saved to the
+  // shared store exactly once per triage result (ref guard survives
+  // StrictMode's double effect invocation).
+  useEffect(() => {
+    if (!result || !recommendedFacility || result.result.severity !== "red") return;
+    const escalationKey = `${result.result.severity_label}|${symptoms.trim()}|${recommendedFacility.id}`;
+    if (escalatedKeyRef.current === escalationKey) return;
+    escalatedKeyRef.current = escalationKey;
+    addEmergency({
+      id: `emg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      patientName: "Anonymous",
+      phone: "",
+      symptoms: symptoms.trim(),
+      timestamp: new Date().toISOString(),
+      facility: recommendedFacility.id,
+      status: "escalated",
+    });
+    setEscalatedTo(recommendedFacility.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, recommendedFacility]);
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-10 md:py-14">
@@ -196,6 +225,30 @@ export default function TriageClient({ lang }: { lang: Language }) {
       {/* Result + recommended facility */}
       {result && !loading && recommendedFacility && (
         <div className="mt-8">
+          {/* Emergency escalation banner (red severity only) */}
+          {result.result.severity === "red" && escalatedTo && (
+            <div
+              role="alert"
+              className="emergency-banner relative overflow-hidden rounded-2xl bg-red-600 p-4 text-white shadow-lg shadow-red-600/30"
+            >
+              <div className="flex flex-wrap items-center gap-3">
+                <Siren className="h-7 w-7 shrink-0 animate-pulse" />
+                <div className="min-w-0">
+                  <p className="text-sm font-black uppercase tracking-wide">
+                    {t.triage.emergencyTitle}
+                  </p>
+                  <p className="mt-0.5 flex items-center gap-1.5 text-sm font-bold text-red-100">
+                    <PhoneCall className="h-4 w-4 shrink-0" />
+                    {t.escalation.notifiedBanner}
+                  </p>
+                </div>
+                <span className="ml-auto rounded-full bg-white/15 px-3 py-1 text-xs font-extrabold ring-1 ring-white/30">
+                  {recommendedFacility.name}
+                </span>
+              </div>
+            </div>
+          )}
+
           <TriageResult result={result.result} source={result.source} lang={lang} />
 
           <div className="mt-6 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:p-8">

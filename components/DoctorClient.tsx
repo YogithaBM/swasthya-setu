@@ -192,8 +192,7 @@ const SEVERITY_CHIP_STYLES: Record<TriageSeverity, string> = {
 
 const LAB_STATUS_STYLES: Record<LabStatus, string> = {
   Pending: "bg-amber-100 text-amber-800 ring-amber-200",
-  "Sample Collected": "bg-sky-100 text-sky-800 ring-sky-200",
-  "Results Ready": "bg-emerald-100 text-emerald-700 ring-emerald-200",
+  Completed: "bg-emerald-100 text-emerald-700 ring-emerald-200",
 };
 
 const FREQUENCY_KEYS: FrequencyKey[] = ["once", "twice", "thrice", "asNeeded"];
@@ -390,15 +389,19 @@ export default function DoctorClient({ lang }: { lang: Language }) {
       });
     }
 
-    // Feature 4 — lab test ordering.
-    if (labTests.length > 0) {
+    // Feature — lab test ordering (one order per test).
+    for (const testName of labTests) {
       addLabOrder({
-        id: `lab-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        id: `lab-${Date.now()}-${Math.random().toString(36).slice(2, 7)}-${testName
+          .toLowerCase()
+          .replace(/[^a-z]+/g, "-")}`,
         patientName: selectedPatient.name,
-        tests: labTests,
+        phone: selectedPatient.phone ?? "",
+        testName,
+        dateOrdered: date,
         facility: origin,
-        date,
         status: "Pending",
+        result: "",
       });
     }
 
@@ -524,18 +527,17 @@ export default function DoctorClient({ lang }: { lang: Language }) {
 
   function labStatusLabel(status: LabStatus): string {
     if (status === "Pending") return t.labOrders.statusPending;
-    if (status === "Sample Collected") return t.labOrders.statusSample;
-    return t.labOrders.statusResults;
+    return t.labOrders.statusCompleted;
   }
 
   const medicineErrorText = errors.medicines;
   /** Orders whose date does not line up with any saved visit record. */
   const unmatchedOrders = patientOrders.filter(
-    (order) => !history.some((record) => record.date === order.date)
+    (order) => !history.some((record) => record.date === order.dateOrdered)
   );
 
   function ordersForDate(dateStr: string): LabOrder[] {
-    return patientOrders.filter((order) => order.date === dateStr);
+    return patientOrders.filter((order) => order.dateOrdered === dateStr);
   }
 
   return (
@@ -1393,16 +1395,18 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                           >
                             <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200">
                               <Microscope className="h-3 w-3" />
-                              {order.tests.slice(0, 3).join(", ")}
-                              {order.tests.length > 3
-                                ? ` +${order.tests.length - 3}`
-                                : ""}
+                              {order.testName}
                             </span>
                             <span
                               className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-extrabold ring-1 ${LAB_STATUS_STYLES[order.status]}`}
                             >
                               {labStatusLabel(order.status)}
                             </span>
+                            {order.status === "Completed" && order.result && (
+                              <span className="text-[11px] font-semibold text-slate-500">
+                                {order.result}
+                              </span>
+                            )}
                           </div>
                         ))}
                         {record.doctorNotes && (
@@ -1424,11 +1428,11 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                         className="flex flex-wrap items-center gap-1.5 rounded-xl bg-sky-50/50 px-3 py-2 ring-1 ring-sky-100"
                       >
                         <span className="text-[11px] font-bold text-slate-500">
-                          {formatLongDate(order.date)}
+                          {formatLongDate(order.dateOrdered)}
                         </span>
                         <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200">
                           <Microscope className="h-3 w-3" />
-                          {order.tests.join(", ")}
+                          {order.testName}
                         </span>
                         <span
                           className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-extrabold ring-1 ${LAB_STATUS_STYLES[order.status]}`}

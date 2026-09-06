@@ -10,24 +10,25 @@ export const LAB_TEST_OPTIONS = [
   "Thyroid",
 ] as const;
 
-export type LabStatus = "Pending" | "Sample Collected" | "Results Ready";
+export type LabStatus = "Pending" | "Completed";
 
-export const LAB_STATUSES: LabStatus[] = [
-  "Pending",
-  "Sample Collected",
-  "Results Ready",
-];
+export const LAB_STATUSES: LabStatus[] = ["Pending", "Completed"];
 
+/** One lab order = one test for one patient. */
 export interface LabOrder {
   id: string;
   patientName: string;
-  /** Test names from LAB_TEST_OPTIONS. */
-  tests: string[];
+  /** 10-digit mobile (links the order to the patient's self-records view). */
+  phone: string;
+  /** Test name from LAB_TEST_OPTIONS. */
+  testName: string;
+  /** YYYY-MM-DD (when the test was ordered). */
+  dateOrdered: string;
   /** Facility id from lib/data where the tests were ordered. */
   facility: string;
-  /** YYYY-MM-DD */
-  date: string;
   status: LabStatus;
+  /** Mock result filled in when the order is marked complete. */
+  result: string;
 }
 
 export const LAB_ORDERS_KEY = "swasthya_lab_orders";
@@ -38,11 +39,12 @@ function isLabOrder(value: unknown): value is LabOrder {
   return (
     typeof record.id === "string" &&
     typeof record.patientName === "string" &&
-    Array.isArray(record.tests) &&
-    record.tests.every((test) => typeof test === "string") &&
+    typeof record.phone === "string" &&
+    typeof record.testName === "string" &&
+    typeof record.dateOrdered === "string" &&
     typeof record.facility === "string" &&
-    typeof record.date === "string" &&
-    LAB_STATUSES.includes(record.status as LabStatus)
+    (record.status === "Pending" || record.status === "Completed") &&
+    typeof record.result === "string"
   );
 }
 
@@ -70,11 +72,37 @@ export function addLabOrder(order: LabOrder): void {
   );
 }
 
-/** Change an order's status (used by the lab orders page). */
-export function updateLabOrderStatus(id: string, status: LabStatus): void {
+/**
+ * Mark an order complete and attach its (mock) result.
+ * Results are demo data — realistic normal ranges per test type.
+ */
+const MOCK_RESULTS: Record<string, string> = {
+  "Blood CBC": "Hemoglobin: 12.5 g/dL - Normal",
+  "Blood Sugar": "Fasting glucose: 92 mg/dL - Normal",
+  "Urine Test": "No protein, no infection - Normal",
+  "X-Ray": "Chest clear, no abnormality detected",
+  ECG: "Normal sinus rhythm, 72 bpm",
+  "Liver Function": "SGPT: 28 U/L - Normal",
+  "Kidney Function": "Creatinine: 0.9 mg/dL - Normal",
+  Thyroid: "TSH: 2.1 mIU/L - Normal",
+};
+
+export function markLabOrderComplete(id: string): void {
   if (typeof window === "undefined") return;
   const current = getLabOrders().map((order) =>
-    order.id === id ? { ...order, status } : order
+    order.id === id
+      ? {
+          ...order,
+          status: "Completed" as LabStatus,
+          result: order.result || MOCK_RESULTS[order.testName] || "Result: Normal",
+        }
+      : order
   );
   window.localStorage.setItem(LAB_ORDERS_KEY, JSON.stringify(current));
+}
+
+/** Lab orders for a patient phone (newest first). */
+export function getLabOrdersByPhone(phone: string): LabOrder[] {
+  const needle = phone.trim();
+  return getLabOrders().filter((order) => order.phone === needle);
 }

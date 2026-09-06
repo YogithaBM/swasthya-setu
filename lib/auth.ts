@@ -16,7 +16,14 @@ export const PUBLIC_PATHS = ["/login", "/access-denied"];
  * the navbar links for that role (Home first, then role-specific items).
  */
 export const ROLE_ROUTES: Record<Role, string[]> = {
-  patient: ["/", "/triage", "/facilities", "/availability", "/appointments"],
+  patient: [
+    "/",
+    "/triage",
+    "/facilities",
+    "/availability",
+    "/appointments",
+    "/my-records",
+  ],
   doctor: [
     "/",
     "/doctor",
@@ -25,6 +32,7 @@ export const ROLE_ROUTES: Record<Role, string[]> = {
     "/followup",
     "/referrals",
     "/lab-orders",
+    "/escalation",
   ],
   asha: [
     "/",
@@ -42,7 +50,14 @@ export const ROLE_ROUTES: Record<Role, string[]> = {
  * appointments page for ASHA workers) stay out of the navbar.
  */
 export const NAV_ROUTES: Record<Role, string[]> = {
-  patient: ["/", "/triage", "/facilities", "/availability", "/appointments"],
+  patient: [
+    "/",
+    "/triage",
+    "/facilities",
+    "/availability",
+    "/appointments",
+    "/my-records",
+  ],
   doctor: [
     "/",
     "/doctor",
@@ -51,6 +66,7 @@ export const NAV_ROUTES: Record<Role, string[]> = {
     "/followup",
     "/referrals",
     "/lab-orders",
+    "/escalation",
   ],
   asha: ["/", "/triage", "/asha", "/facilities", "/availability"],
 };

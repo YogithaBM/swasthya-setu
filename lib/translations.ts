@@ -26,6 +26,8 @@ export interface Translation {
     followups: string;
     referrals: string;
     labOrders: string;
+    escalations: string;
+    myRecords: string;
     asha: string;
   };
   roles: {
@@ -90,6 +92,7 @@ export interface Translation {
     examplesLabel: string;
     examples: [string, string, string];
     submit: string;
+    emergencyTitle: string;
     loadingTitle: string;
     loadingSub: string;
     errorTitle: string;
@@ -335,10 +338,48 @@ export interface Translation {
     colDate: string;
     colStatus: string;
     statusPending: string;
-    statusSample: string;
-    statusResults: string;
+    statusCompleted: string;
+    colResult: string;
+    markComplete: string;
+    completedToast: string;
     noOrders: string;
     updated: string;
+  };
+  escalation: {
+    badge: string;
+    title: string;
+    description: string;
+    colPatient: string;
+    colSymptoms: string;
+    colFacility: string;
+    colTime: string;
+    colStatus: string;
+    statusEscalated: string;
+    statusResolved: string;
+    noEscalations: string;
+    notifiedBanner: string;
+    notFound: string;
+    updated: string;
+  };
+  myRecords: {
+    badge: string;
+    title: string;
+    description: string;
+    phoneLabel: string;
+    phonePlaceholder: string;
+    findRecords: string;
+    notFound: string;
+    visitsSection: string;
+    noVisits: string;
+    followupsSection: string;
+    noFollowups: string;
+    labsSection: string;
+    noLabs: string;
+    labStatusPending: string;
+    labStatusCompleted: string;
+    referralsSection: string;
+    noReferrals: string;
+    note: string;
   };
   asha: {
     badge: string;
@@ -408,6 +449,8 @@ export const translations: Record<Language, Translation> = {
       followups: "Follow-ups",
       referrals: "Referrals",
       labOrders: "Lab Orders",
+      escalations: "Escalations",
+      myRecords: "My Records",
       asha: "My Patients",
     },
     roles: {
@@ -488,6 +531,7 @@ export const translations: Record<Language, Translation> = {
         "Severe chest pain and difficulty breathing",
       ],
       submit: "Check Facility",
+      emergencyTitle: "🚨 Emergency Detected — Escalating to District Hospital",
       loadingTitle: "Analyzing symptoms...",
       loadingSub: "Analyzing symptoms with AI",
       errorTitle: "Error",
@@ -704,10 +748,48 @@ export const translations: Record<Language, Translation> = {
       colDate: "Date",
       colStatus: "Status",
       statusPending: "Pending",
-      statusSample: "Sample Collected",
-      statusResults: "Results Ready",
+      statusCompleted: "Completed",
+      colResult: "Result",
+      markComplete: "Mark Complete",
+      completedToast: "Lab test marked complete",
       noOrders: "No lab orders yet. Orders created from the doctor panel will appear here.",
       updated: "Lab order status updated",
+    },
+    escalation: {
+      badge: "Emergency Response",
+      title: "Emergency Escalations",
+      description: "Red-severity triage cases automatically escalated to the district emergency network.",
+      colPatient: "Patient",
+      colSymptoms: "Symptoms",
+      colFacility: "Escalated To",
+      colTime: "Time",
+      colStatus: "Status",
+      statusEscalated: "Escalated",
+      statusResolved: "Resolved",
+      noEscalations: "No emergencies escalated yet. Red-severity triage results appear here automatically.",
+      notifiedBanner: "Emergency Contact Notified",
+      notFound: "No escalated cases found.",
+      updated: "Escalation status updated",
+    },
+    myRecords: {
+      badge: "Personal Health",
+      title: "My Records",
+      description: "Enter your mobile number to see your visits, prescriptions, lab results and follow-ups.",
+      phoneLabel: "Mobile Number",
+      phonePlaceholder: "10-digit mobile number",
+      findRecords: "Find My Records",
+      notFound: "No records found for this number. Book an appointment or visit a facility to create your health record.",
+      visitsSection: "Past Visits & Prescriptions",
+      noVisits: "No past visits yet.",
+      followupsSection: "Upcoming Follow-ups",
+      noFollowups: "No upcoming follow-ups.",
+      labsSection: "Lab Tests",
+      noLabs: "No lab tests ordered.",
+      labStatusPending: "Pending",
+      labStatusCompleted: "Completed",
+      referralsSection: "Active Referrals",
+      noReferrals: "No active referrals.",
+      note: "Demo tip: try 9876543210 (Nischitha's number from a booked appointment).",
     },
     asha: {
       badge: "Community Health",
@@ -807,6 +889,8 @@ export const translations: Record<Language, Translation> = {
       followups: "फॉलो-अप",
       referrals: "रेफ़रल",
       labOrders: "लैब ऑर्डर",
+      escalations: "एस्कलेशन",
+      myRecords: "मेरे रिकॉर्ड",
       asha: "मेरे मरीज़",
     },
     roles: {
@@ -887,6 +971,7 @@ export const translations: Record<Language, Translation> = {
         "छाती में तेज़ दर्द और साँस लेने में तकलीफ",
       ],
       submit: "सुविधा जाँचें",
+      emergencyTitle: "🚨 आपातकाल पाया गया — जिला अस्पताल को सूचित किया जा रहा है",
       loadingTitle: "लक्षणों का विश्लेषण हो रहा है...",
       loadingSub: "एआई की मदद से लक्षणों का विश्लेषण हो रहा है",
       errorTitle: "त्रुटि",
@@ -1103,10 +1188,48 @@ export const translations: Record<Language, Translation> = {
       colDate: "तिथि",
       colStatus: "स्थिति",
       statusPending: "लंबित",
-      statusSample: "नमूना लिया गया",
-      statusResults: "परिणाम तैयार",
+      statusCompleted: "पूर्ण",
+      colResult: "परिणाम",
+      markComplete: "पूर्ण करें",
+      completedToast: "लैब टेस्ट पूर्ण चिन्हित हुआ",
       noOrders: "अभी कोई लैब ऑर्डर नहीं है। डॉक्टर पैनल से बनाए गए ऑर्डर यहाँ दिखेंगे।",
       updated: "लैब ऑर्डर स्थिति अपडेट हुई",
+    },
+    escalation: {
+      badge: "आपातकालीन प्रतिक्रिया",
+      title: "आपातकालीन एस्कलेशन",
+      description: "लाल गंभीरता वाले ट्रायज मामले स्वतः जिला आपातकालीन नेटवर्क में भेजे जाते हैं।",
+      colPatient: "मरीज़",
+      colSymptoms: "लक्षण",
+      colFacility: "कहाँ भेजा गया",
+      colTime: "समय",
+      colStatus: "स्थिति",
+      statusEscalated: "भेजा गया",
+      statusResolved: "हल हुआ",
+      noEscalations: "अभी कोई आपातकालीन मामला नहीं। लाल गंभीरता वाले ट्रायज परिणाम यहाँ स्वतः दिखेंगे।",
+      notifiedBanner: "आपातकालीन संपर्क को सूचित किया गया",
+      notFound: "कोई एस्कलेटेड मामला नहीं मिला।",
+      updated: "एस्कलेशन स्थिति अपडेट हुई",
+    },
+    myRecords: {
+      badge: "व्यक्तिगत स्वास्थ्य",
+      title: "मेरे रिकॉर्ड",
+      description: "अपना मोबाइल नंबर डालें और अपनी यात्राएँ, प्रिस्क्रिप्शन, लैब रिपोर्ट और फॉलो-अप देखें।",
+      phoneLabel: "मोबाइल नंबर",
+      phonePlaceholder: "10 अंकों का मोबाइल नंबर",
+      findRecords: "मेरे रिकॉर्ड खोजें",
+      notFound: "इस नंबर के लिए कोई रिकॉर्ड नहीं मिला। अपॉइंटमेंट बुक करें या स्वास्थ्य केंद्र जाएँ।",
+      visitsSection: "पिछली यात्राएँ और प्रिस्क्रिप्शन",
+      noVisits: "अभी कोई पिछली यात्रा नहीं।",
+      followupsSection: "आगामी फॉलो-अप",
+      noFollowups: "कोई आगामी फॉलो-अप नहीं।",
+      labsSection: "लैब टेस्ट",
+      noLabs: "कोई लैब टेस्ट ऑर्डर नहीं हुआ।",
+      labStatusPending: "लंबित",
+      labStatusCompleted: "पूर्ण",
+      referralsSection: "सक्रिय रेफ़रल",
+      noReferrals: "कोई सक्रिय रेफ़रल नहीं।",
+      note: "डेमो सुझाव: 9876543210 आज़माएँ (Nischitha का नंबर)।",
     },
     asha: {
       badge: "सामुदायिक स्वास्थ्य",

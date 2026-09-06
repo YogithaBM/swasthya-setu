@@ -14,6 +14,20 @@ html {
   color: #ffffff;
 }
 
+/* Emergency escalation banner — pulsing red glow. */
+@keyframes emergency-pulse {
+  0%,
+  100% {
+    box-shadow: 0 10px 15px -3px rgb(220 38 38 / 0.3), 0 0 0 0 rgb(220 38 38 / 0.45);
+  }
+  50% {
+    box-shadow: 0 10px 15px -3px rgb(220 38 38 / 0.45), 0 0 0 10px rgb(220 38 38 / 0);
+  }
+}
+.emergency-banner {
+  animation: emergency-pulse 1.2s ease-in-out infinite;
+}
+
 /* When printing a prescription, show only the prescription card. */
 @media print {
   body * {

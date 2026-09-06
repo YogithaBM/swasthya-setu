@@ -9,12 +9,14 @@ import {
   Building2,
   CalendarClock,
   CalendarDays,
+  FileLock2,
   HeartHandshake,
   HeartPulse,
   Home,
   LogOut,
   Menu,
   Microscope,
+  Siren,
   Stethoscope,
   UserRound,
   X,
@@ -46,6 +48,8 @@ const NAV_BY_HREF: Record<string, Omit<NavEntry, "href">> = {
   "/followup": { labelKey: "followups", icon: CalendarClock },
   "/referrals": { labelKey: "referrals", icon: ArrowLeftRight },
   "/lab-orders": { labelKey: "labOrders", icon: Microscope },
+  "/escalation": { labelKey: "escalations", icon: Siren },
+  "/my-records": { labelKey: "myRecords", icon: FileLock2 },
   "/asha": { labelKey: "asha", icon: HeartHandshake },
 };
 
