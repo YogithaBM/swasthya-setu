@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import TopNav from "@/components/TopNav";
+import PublicNav from "@/components/PublicNav";
 import {
   applyThemeClass,
   getTheme,
@@ -12,6 +13,7 @@ import {
   canAccess,
   clearRole,
   getRole,
+  PUBLIC_PATHS,
   roleHome,
   type Role,
 } from "@/lib/auth";
@@ -44,8 +46,8 @@ export default function AppShell({
     setRole(current);
 
     if (!current) {
-      // Not logged in — only /login is reachable.
-      if (pathname !== "/login") {
+      // Not logged in — public routes only; everything else goes to /login.
+      if (!PUBLIC_PATHS.includes(pathname)) {
         router.replace("/login");
         return;
       }
@@ -74,16 +76,24 @@ export default function AppShell({
 
   return (
     <>
-      {showNav && role && (
-        <TopNav
-          lang={lang}
-          role={role}
-          onLogout={() => {
-            clearRole();
-            router.replace("/login");
-          }}
-        />
-      )}
+      {showNav &&
+        (role ? (
+          <TopNav
+            lang={lang}
+            role={role}
+            onLogout={() => {
+              clearRole();
+              try {
+                window.localStorage.removeItem("swasthya_user");
+              } catch {}
+              // Return to the public homepage after logging out.
+              router.replace("/");
+            }}
+          />
+        ) : (
+          // Public visitor nav on the open homepage (no role stored).
+          <PublicNav lang={lang} />
+        ))}
       <main className={showNav ? "min-w-0 pt-20" : "min-w-0"}>{children}</main>
     </>
   );

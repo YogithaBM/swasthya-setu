@@ -8,8 +8,8 @@ export const ASHA_PIN = "5678";
 export const MAX_PIN_ATTEMPTS = 3;
 export const PIN_LOCK_SECONDS = 30;
 
-/** Routes that never require a role (login + the access-denied explainer). */
-export const PUBLIC_PATHS = ["/login", "/access-denied"];
+/** Routes that never require a role (public home, login, access-denied explainer). */
+export const PUBLIC_PATHS = ["/", "/login", "/access-denied"];
 
 /**
  * Which routes each role may visit. The array order also drives the order of

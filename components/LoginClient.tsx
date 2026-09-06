@@ -220,7 +220,7 @@ export default function LoginClient({ lang }: { lang: Language }) {
   return (
     <>
       <ClientLangToggle lang={lang} />
-      <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center overflow-hidden px-4 py-14">
+      <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-14 md:px-6">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-200/50 blur-3xl"
