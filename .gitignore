@@ -31,3 +31,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Freebuff local runtime data (preview logs, session db)
+.freebuff/
