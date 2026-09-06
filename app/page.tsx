@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 
 import HomeCta from "@/components/HomeCta";
+import HomeStats from "@/components/HomeStats";
 import { availableBeds, facilities, totalBeds } from "@/lib/data";
-import { getAppointments } from "@/lib/appointments";
 import { getLang } from "@/lib/lang";
 import { getTranslations } from "@/lib/translations";
 
@@ -23,11 +23,6 @@ export default function HomePage() {
 
   const networkTotalBeds = facilities.reduce((sum, f) => sum + totalBeds(f), 0);
   const networkAvailableBeds = facilities.reduce((sum, f) => sum + availableBeds(f), 0);
-  const todayStr = new Date().toLocaleDateString("en-CA");
-  const appointmentsToday = getAppointments().filter(
-    (appointment) => !appointment.date || appointment.date === todayStr
-  ).length;
-  const patientsServed = 247;
 
   const steps = [
     { icon: MessagesSquare, title: t.howItWorks.step1Title, desc: t.howItWorks.step1Desc },
@@ -75,30 +70,15 @@ export default function HomePage() {
           {/* Primary CTA + subtle staff link */}
           <HomeCta lang={lang} />
 
-          {/* Glass stat cards */}
-          <div className="mx-auto mt-12 grid max-w-3xl gap-4 sm:grid-cols-3">
-            <div className="glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100" style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
-              <div className="flex items-center justify-center gap-3">
-                <Building2 className="h-6 w-6 text-teal-300" />
-                <p className="text-3xl font-extrabold">{facilities.length}</p>
-              </div>
-              <p className="mt-1 text-xs font-medium text-teal-50/85">{t.stats.facilities}</p>
-            </div>
-            <div className="glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100" style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
-              <div className="flex items-center justify-center gap-3">
-                <Users className="h-6 w-6 text-teal-300" />
-                <p className="text-3xl font-extrabold">{patientsServed}</p>
-              </div>
-              <p className="mt-1 text-xs font-medium text-teal-50/85">{t.stats.patientsServed}</p>
-            </div>
-            <div className="glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100" style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
-              <div className="flex items-center justify-center gap-3">
-                <CalendarDays className="h-6 w-6 text-teal-300" />
-                <p className="text-3xl font-extrabold">{appointmentsToday}</p>
-              </div>
-              <p className="mt-1 text-xs font-medium text-teal-50/85">{t.stats.appointmentsToday}</p>
-            </div>
-          </div>
+          {/* Glass stat cards — live from the appointment store */}
+          <HomeStats
+            facilityCount={facilities.length}
+            labels={{
+              facilities: t.stats.facilities,
+              patientsServed: t.stats.patientsServed,
+              appointmentsToday: t.stats.appointmentsToday,
+            }}
+          />
         </div>
       </section>
 
