@@ -131,15 +131,25 @@ export function localToday(): string {
 /** Read the shared appointment store, falling back to the hardcoded samples. */
 export function getAppointments(): StoredAppointment[] {
   if (typeof window === "undefined") return SAMPLE_APPOINTMENTS;
+  const stored = getStoredAppointments();
+  return stored.length > 0 ? stored : SAMPLE_APPOINTMENTS;
+}
+
+/**
+ * Read ONLY what patients actually booked — no sample fallback. Used by the
+ * appointments table and homepage stats, where an empty store must show 0
+ * rather than demo data.
+ */
+export function getStoredAppointments(): StoredAppointment[] {
+  if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(APPOINTMENTS_STORAGE_KEY);
-    if (!raw) return SAMPLE_APPOINTMENTS;
+    if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return SAMPLE_APPOINTMENTS;
-    const valid = parsed.filter(isStoredAppointment);
-    return valid.length > 0 ? valid : SAMPLE_APPOINTMENTS;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isStoredAppointment);
   } catch {
-    return SAMPLE_APPOINTMENTS;
+    return [];
   }
 }
 

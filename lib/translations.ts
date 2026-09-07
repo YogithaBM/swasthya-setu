@@ -239,6 +239,7 @@ export interface Translation {
     filterAll: string;
     newTag: string;
     noAppointments: string;
+    noAppointmentsToday: string;
   };
   doctor: {
     badge: string;
@@ -704,6 +705,7 @@ export const translations: Record<Language, Translation> = {
       filterAll: "All",
       newTag: "New",
       noAppointments: "No appointments match this filter.",
+      noAppointmentsToday: "No appointments today. Book one to get started →",
     },
     doctor: {
       badge: "Doctor Panel",
@@ -1166,6 +1168,7 @@ export const translations: Record<Language, Translation> = {
       filterAll: "सभी",
       newTag: "नया",
       noAppointments: "इस फ़िल्टर से कोई अपॉइंटमेंट मेल नहीं खाता।",
+      noAppointmentsToday: "आज कोई अपॉइंटमेंट नहीं। बुक करके शुरुआत करें →",
     },
     doctor: {
       badge: "डॉक्टर पैनल",

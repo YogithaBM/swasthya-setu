@@ -16,8 +16,8 @@ import {
 
 import {
   addAppointment,
-  getAppointments,
-  SAMPLE_APPOINTMENTS,
+  getStoredAppointments,
+  localToday,
   type AppointmentStatus,
   type StoredAppointment,
 } from "@/lib/appointments";
@@ -99,13 +99,24 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
   });
   const [toast, setToast] = useState<string | null>(null);
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
-  const [appointments, setAppointments] =
-    useState<StoredAppointment[]>(SAMPLE_APPOINTMENTS);
+  /** Today's REAL bookings from localStorage — no hardcoded samples. */
+  const [appointments, setAppointments] = useState<StoredAppointment[]>([]);
   const [filter, setFilter] = useState<FilterKey>("all");
 
-  // Load the shared store (includes any status updates made by the doctor page).
+  // Load today's real bookings, and re-read when the tab regains focus so a
+  // booking made elsewhere (or completed by the doctor) shows up live.
   useEffect(() => {
-    setAppointments(getAppointments());
+    const today = localToday();
+
+    function recompute() {
+      setAppointments(
+        getStoredAppointments().filter((appointment) => appointment.date === today)
+      );
+    }
+
+    recompute();
+    window.addEventListener("focus", recompute);
+    return () => window.removeEventListener("focus", recompute);
   }, []);
 
   const values: FormValues = { facilityId, date, time, patientName, phone };
@@ -186,7 +197,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
     };
     addAppointment(appointment);
 
-    // Today's bookings also appear live at the top of the queue table.
+    // Today's bookings appear live at the top of the queue table.
     if (date === todayStr) {
       setAppointments((previous) => [appointment, ...previous]);
     }
@@ -625,7 +636,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
                 <tr>
                   <td colSpan={5} className="px-3 py-10 text-center">
                     <p className="text-sm font-semibold text-slate-400">
-                      {t.appointments.noAppointments}
+                      {t.appointments.noAppointmentsToday}
                     </p>
                   </td>
                 </tr>

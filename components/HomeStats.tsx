@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Building2, CalendarDays, Users } from "lucide-react";
 
-import { getAppointments, localToday } from "@/lib/appointments";
+import { getStoredAppointments, localToday } from "@/lib/appointments";
 
 interface HomeStatsProps {
   facilityCount: number;
@@ -29,7 +29,7 @@ export default function HomeStats({ facilityCount, labels }: HomeStatsProps) {
 
   useEffect(() => {
     function recompute() {
-      const appointments = getAppointments();
+      const appointments = getStoredAppointments();
       const today = localToday();
 
       const phones = new Set(
