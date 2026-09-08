@@ -49,8 +49,13 @@ export default function FacilityMap({ lang }: { lang: Language }) {
           key={facility.id}
           position={[facility.lat, facility.lng]}
           icon={pinIcon(facility.level)}
+          eventHandlers={{
+            // Show facility info on hover — no click needed. The popup's
+            // close button (and mouseout elsewhere) still dismisses it.
+            mouseover: (event) => event.target.openPopup(),
+          }}
         >
-          <Popup>
+          <Popup autoPan={false}>
             <div className="space-y-1.5 text-left">
               <p className="text-sm font-extrabold leading-snug text-slate-800">
                 {facility.name}

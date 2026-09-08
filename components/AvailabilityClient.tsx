@@ -44,14 +44,17 @@ import { getAshaPatients } from "@/lib/ashaPatients";
 import { getFollowups } from "@/lib/followups";
 import { getReferrals } from "@/lib/referrals";
 import { getTranslations, translations, type Language } from "@/lib/translations";
+import { useTheme } from "@/lib/theme";
 
 const BED_CATEGORIES = ["general", "icu", "maternity"] as const;
 
 const BED_BOX_STYLES: Record<string, string> = {
-  good: "bg-emerald-100/70 text-emerald-900 ring-emerald-200",
-  fair: "bg-amber-100/70 text-amber-900 ring-amber-200",
-  low: "bg-red-100/70 text-red-900 ring-red-200",
-  na: "bg-slate-100 text-slate-400 ring-slate-200",
+  // Dark-mode text colors are brightened per the spec: emerald-400/amber-300/
+  // red-400 stay readable on the tinted dark boxes.
+  good: "bg-emerald-100/70 text-emerald-900 ring-emerald-200 dark:text-emerald-400",
+  fair: "bg-amber-100/70 text-amber-900 ring-amber-200 dark:text-amber-300",
+  low: "bg-red-100/70 text-red-900 ring-red-200 dark:text-red-400",
+  na: "bg-slate-100 text-slate-400 ring-slate-200 dark:text-slate-400",
 };
 
 const BED_STATUS_DOTS: Record<string, string> = {
@@ -252,6 +255,8 @@ const ALERT_ROW_STYLES: Record<"red" | "yellow", string> = {
 
 export default function AvailabilityClient({ lang }: { lang: Language }) {
   const t = getTranslations(lang);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const otherTitle = translations[lang === "hi" ? "en" : "hi"].availability.title;
 
   const [facilityFilter, setFacilityFilter] = useState("");
@@ -579,10 +584,10 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="font-extrabold leading-snug text-slate-800">
+                    <p className="font-extrabold leading-snug text-slate-800 dark:text-slate-100">
                       {facility.name}
                     </p>
-                    <p className="mt-0.5 flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                    <p className="mt-0.5 flex items-center gap-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
                       <span
                         className="inline-block h-2 w-2 rounded-full"
                         style={{ backgroundColor: LEVEL_COLORS[facility.level] }}
@@ -667,24 +672,33 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
               <XAxis
                 dataKey="label"
-                tick={{ fill: "#64748b", fontSize: 12, fontWeight: 700 }}
+                tick={{
+                  fill: isDark ? "#e2e8f0" : "#475569",
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fill: "#94a3b8", fontSize: 11 }}
+                tick={{ fill: isDark ? "#94a3b8" : "#94a3b8", fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
                 allowDecimals={false}
               />
               <Tooltip
-                cursor={{ fill: "#eff6ff" }}
+                cursor={{ fill: isDark ? "rgba(13,148,136,0.1)" : "#eff6ff" }}
                 contentStyle={{
                   borderRadius: 12,
-                  border: "1px solid #e2e8f0",
+                  border: isDark ? "1px solid rgba(148,163,184,0.2)" : "1px solid #e2e8f0",
                   fontSize: 13,
                   fontWeight: 600,
+                  // Tooltip panel is white in both themes — keep its text dark.
+                  color: "#1e293b",
+                  background: "rgba(255,255,255,0.98)",
                 }}
+                labelStyle={{ color: "#0f172a", fontWeight: 800 }}
+                itemStyle={{ color: "#334155" }}
                 formatter={(value) => [
                   `${value}`,
                   t.availability.dashboard.patientsUnit,
@@ -771,10 +785,10 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="font-extrabold leading-snug text-slate-800">
+                    <p className="font-extrabold leading-snug text-slate-800 dark:text-slate-100">
                       {facility.name}
                     </p>
-                    <p className="mt-0.5 flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
+                    <p className="mt-0.5 flex items-center gap-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400">
                       <span
                         className="inline-block h-2 w-2 rounded-full"
                         style={{ backgroundColor: LEVEL_COLORS[facility.level] }}
@@ -803,13 +817,13 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
                         key={category}
                         className={`flex flex-col items-center rounded-xl px-2 py-3 text-center ring-1 ${BED_BOX_STYLES[status]}`}
                       >
-                        <span className="text-[10px] font-bold uppercase tracking-wide opacity-80">
+                        <span className="text-[10px] font-bold uppercase tracking-wide opacity-80 dark:text-slate-300">
                           {t.bedTypes[category]}
                         </span>
-                        <span className="mt-1 text-sm font-extrabold">
+                        <span className="mt-1 text-sm font-extrabold dark:text-white">
                           {bed.available}/{bed.total}
                         </span>
-                        <span className="text-[10px] font-semibold opacity-70">
+                        <span className="text-[10px] font-semibold opacity-70 dark:opacity-100 dark:text-slate-200">
                           {free === null ? "—" : `${free}% ${t.facilities.bedsFree}`}
                         </span>
                       </div>
