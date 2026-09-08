@@ -37,6 +37,8 @@ export default function TriageClient({ lang }: { lang: Language }) {
 
   const [symptoms, setSymptoms] = useState("");
   const [loading, setLoading] = useState(false);
+  /** After 10s the API route switches to the local fallback — update the label. */
+  const [slowLoading, setSlowLoading] = useState(false);
   const [result, setResult] = useState<TriageResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** Facility the red-severity case was escalated to (set once per result). */
@@ -55,9 +57,14 @@ export default function TriageClient({ lang }: { lang: Language }) {
     if (!text || loading) return;
 
     setLoading(true);
+    setSlowLoading(false);
     setError(null);
     setResult(null);
     setEscalatedTo(null);
+
+    // The API route returns the local keyword result after 10s — flip the
+    // loading label to match so the user knows quick analysis took over.
+    const slowTimer = setTimeout(() => setSlowLoading(true), 10_000);
 
     try {
       const response = await fetch("/api/triage", {
@@ -79,6 +86,8 @@ export default function TriageClient({ lang }: { lang: Language }) {
             : "Something went wrong. Please try again."
       );
     } finally {
+      clearTimeout(slowTimer);
+      setSlowLoading(false);
       setLoading(false);
     }
   }
@@ -204,7 +213,9 @@ export default function TriageClient({ lang }: { lang: Language }) {
           <p className="text-lg font-extrabold text-slate-800 dark:text-slate-100">
             {t.triage.loadingTitle}
           </p>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t.triage.loadingSub}</p>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {slowLoading ? t.triage.loadingQuickSub : t.triage.loadingSub}
+          </p>
           <div className="mx-auto mt-6 max-w-md space-y-2.5">
             <div className="skeleton h-3 w-full" />
             <div className="skeleton h-3 w-4/5" />

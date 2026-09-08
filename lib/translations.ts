@@ -114,6 +114,8 @@ export interface Translation {
     emergencyTitle: string;
     loadingTitle: string;
     loadingSub: string;
+    /** Shown after 10s while the fast local analysis takes over. */
+    loadingQuickSub: string;
     errorTitle: string;
     resultLabel: string;
     sourceGemini: string;
@@ -575,8 +577,10 @@ export const translations: Record<Language, Translation> = {
       ],
       submit: "Check Facility",
       emergencyTitle: "🚨 Emergency Detected — Escalating to District Hospital",
-      loadingTitle: "Analyzing symptoms...",
-      loadingSub: "Analyzing symptoms with AI",
+    loadingTitle: "Analyzing symptoms...",
+    loadingSub: "Analyzing symptoms with AI",
+    /** Shown after 10s while the fast local analysis takes over. */
+    loadingQuickSub: "Using quick analysis...",
       errorTitle: "Error",
       resultLabel: "Triage Result",
       sourceGemini: "Gemini AI",
@@ -1041,6 +1045,7 @@ export const translations: Record<Language, Translation> = {
       emergencyTitle: "🚨 आपातकाल पाया गया — जिला अस्पताल को सूचित किया जा रहा है",
       loadingTitle: "लक्षणों का विश्लेषण हो रहा है...",
       loadingSub: "एआई की मदद से लक्षणों का विश्लेषण हो रहा है",
+      loadingQuickSub: "तेज़ स्थानीय विश्लेषण का उपयोग हो रहा है...",
       errorTitle: "त्रुटि",
       resultLabel: "परिणाम",
       sourceGemini: "जेमिनी एआई",
