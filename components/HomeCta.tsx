@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowRight, CalendarPlus, Stethoscope } from "lucide-react";
+import { CalendarPlus, Stethoscope } from "lucide-react";
 
 import { clearRole, setRole } from "@/lib/auth";
 import { getTranslations, type Language } from "@/lib/translations";
@@ -33,16 +33,15 @@ export default function HomeCta({ lang }: { lang: Language }) {
       <button
         type="button"
         onClick={bookAppointment}
-        className="btn-primary inline-flex items-center gap-2 rounded-xl px-10 py-4 text-base font-extrabold md:text-lg"
+        className="ds-btn ds-btn-primary px-10 text-base md:text-lg"
       >
         <CalendarPlus className="h-5 w-5" />
         {t.bookAppointmentCta}
-        <ArrowRight className="h-5 w-5" />
       </button>
       <button
         type="button"
         onClick={staffLogin}
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-100/85 underline-offset-4 transition hover:text-white hover:underline"
+        className="inline-flex min-h-touch items-center gap-1.5 text-sm font-semibold text-brand underline-offset-4 transition hover:underline"
       >
         <Stethoscope className="h-4 w-4" />
         {t.staffLoginLink}

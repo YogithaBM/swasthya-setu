@@ -117,12 +117,12 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
   const hint = isDoctor ? t.login.pinHint : t.login.ashaPinHint;
 
   return (
-    <div className="glass-card lift-hover flex flex-col p-7 md:p-8">
+    <div className="ds-panel flex flex-col p-7 md:p-8">
       <div
-        className={`flex h-14 w-14 items-center justify-center rounded-2xl ${
+        className={`flex h-14 w-14 items-center justify-center rounded-lg ${
           isDoctor
-            ? "bg-emerald-100 text-emerald-700"
-            : "bg-amber-100 text-amber-700"
+            ? "bg-brand-tint text-brand"
+            : "bg-status-attention-tint text-status-attention"
         }`}
       >
         {isDoctor ? (
@@ -131,22 +131,22 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
           <HeartHandshake className="h-7 w-7" />
         )}
       </div>
-      <h3 className="mt-5 text-xl font-extrabold text-slate-800">
+      <h3 className="mt-5 text-xl font-extrabold text-ink-strong">
         {isDoctor ? t.login.doctorTitle : t.login.ashaTitle}
       </h3>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-500">
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-mute">
         {isDoctor ? t.login.doctorDesc : t.login.ashaDesc}
       </p>
 
       <form onSubmit={handleUnlock} className="mt-6">
         <label
           htmlFor={`${role}-pin`}
-          className="text-xs font-bold uppercase tracking-wider text-slate-400"
+          className="ds-label"
         >
           {t.login.pinLabel}
         </label>
         <div className="relative mt-2">
-          <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <KeyRound className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint" />
           <input
             id={`${role}-pin`}
             type="password"
@@ -159,24 +159,20 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
               setValue(event.target.value.replace(/\D/g, "").slice(0, 4))
             }
             placeholder={t.login.pinPlaceholder}
-            className={`w-full rounded-xl border py-3 pl-10 pr-3.5 text-sm tracking-[0.3em] text-slate-800 placeholder:tracking-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 ${
-              isDoctor
-                ? "border-slate-200 bg-slate-50 focus:border-emerald-600 focus:ring-emerald-600/20"
-                : "border-slate-200 bg-slate-50 focus:border-amber-600 focus:ring-amber-600/20"
-            }`}
+            className="ds-input pl-10 tracking-[0.3em] placeholder:tracking-normal"
           />
         </div>
 
         {error && !lock.locked && (
-          <p className="mt-2 text-xs font-bold text-red-600">{t.login.wrongPin}</p>
+          <p className="mt-2 text-xs font-bold text-status-emergency">{t.login.wrongPin}</p>
         )}
         {!lock.locked && lock.attempts > 0 && (
-          <p className="mt-1 text-[11px] font-semibold text-slate-400">
+          <p className="mt-1 text-[11px] font-semibold text-ink-faint">
             {t.login.attemptsLeft.replace("{n}", String(attemptsLeft))}
           </p>
         )}
         {lock.locked && (
-          <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-amber-700">
+          <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-status-attention">
             <Lock className="h-3.5 w-3.5" />
             {t.login.locked.replace("{n}", String(lock.lockSeconds))}
           </p>
@@ -185,13 +181,7 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
         <button
           type="submit"
           disabled={lock.locked}
-          className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-sm font-bold text-white shadow-md transition ${
-            lock.locked
-              ? "cursor-not-allowed bg-slate-300 shadow-none"
-              : isDoctor
-                ? "bg-emerald-600 shadow-emerald-900/20 hover:bg-emerald-700"
-                : "bg-amber-600 shadow-amber-900/20 hover:bg-amber-700"
-          }`}
+          className="ds-btn ds-btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-45"
         >
           {lock.locked ? (
             <>
@@ -206,7 +196,7 @@ function PinCard({ lang, role }: { lang: Language; role: PinRole }) {
           )}
         </button>
       </form>
-      <p className="mt-3 text-center text-[11px] font-semibold text-slate-400">
+      <p className="mt-3 text-center text-[11px] font-semibold text-ink-faint">
         {hint}
       </p>
     </div>
@@ -220,40 +210,27 @@ export default function LoginClient({ lang }: { lang: Language }) {
   return (
     <>
       <ClientLangToggle lang={lang} />
-      <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden px-4 py-14 md:px-6">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-200/50 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-emerald-200/50 blur-3xl"
-        />
-
+      <div className="relative flex min-h-screen w-full flex-col items-center justify-center px-4 py-14 md:px-6">
         <div className="relative w-full text-center">
           {/* Brand */}
-          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-lg shadow-teal-600/30">
-            <HeartPulse className="h-7 w-7 text-white" />
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-brand-strong text-brand-strong-ink">
+            <HeartPulse className="h-7 w-7" />
           </span>
-          <h2 className="mt-4 text-2xl font-extrabold text-slate-800">
+          <h2 className="mt-4 text-2xl font-extrabold text-ink-strong">
             {t.appName}
           </h2>
-          <p className="text-sm font-semibold text-blue-800">
+          <p className="text-sm font-semibold text-brand">
             {t.appNameRoman} · Health Bridge
           </p>
 
           {/* Title */}
-          <span className="mt-6 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-800 ring-1 ring-blue-200">
-            <ShieldCheck className="h-4 w-4" />
-            {t.login.badge}
-          </span>
-          <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
+          <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-ink-strong md:text-5xl">
             {t.login.title}
           </h1>
-          <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">
+          <p className="mt-2 text-lg font-bold text-brand md:text-2xl">
             {otherTitle}
           </p>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-500 md:text-base">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ink-mute md:text-base">
             {t.login.description}
           </p>
         </div>

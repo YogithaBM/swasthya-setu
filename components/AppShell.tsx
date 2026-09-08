@@ -65,7 +65,7 @@ export default function AppShell({
   if (!ready) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <div className="h-12 w-12 animate-pulse rounded-2xl bg-teal-500/70" />
+        <div className="h-12 w-12 animate-pulse rounded-2xl bg-brand-tint" />
         <div className="skeleton h-3 w-32" />
         <span className="sr-only">Loading…</span>
       </div>

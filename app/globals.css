@@ -12,6 +12,80 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+/* ==========================================================================
+   Swasthya Setu design tokens
+   --------------------------------------------------------------------------
+   One set of utility classes (bg-page, bg-panel, text-ink, border-line,
+   bg-brand, bg-status-safe, ...) works in BOTH themes — only the variable
+   values change. Components share identical structure across themes; contrast
+   is tuned per theme at this single source of truth.\n
+   Brand: sage green (muted clinical accent). Neutrals: warm off-white (light)
+   / warm charcoal (dark) — deliberately not navy. Status accents are adjusted
+   per theme for WCAG-AA-grade contrast on their surfaces.
+   ========================================================================== */
+:root {
+  /* Surfaces */
+  --page: #f6f5f1;            /* warm off-white — softer than pure white */
+  --panel: #ffffff;           /* card surface */
+  --panel-2: #efeee9;         /* nested / inset surface */
+  --line: #e2e0d8;            /* hairline borders */
+
+  /* Ink (text) */
+  --ink: #2a2f2c;             /* body — near-black with a warm cast */
+  --ink-strong: #171b18;      /* headings */
+  --ink-mute: #5c635e;        /* secondary */
+  --ink-faint: #8b928c;       /* placeholder, disabled */
+
+  /* Brand — sage green */
+  --brand: #3d6649;           /* links, focus rings, active nav */
+  --brand-strong: #35593f;    /* filled buttons (white text, AA at 14px+) */
+  --brand-strong-ink: #ffffff; /* text on filled buttons */
+  --brand-soft: #dce9df;      /* hover fill, selected row */
+  --brand-tint: #eff5f0;      /* subtle tinted background */
+
+  /* Triage status — shape+label always accompany colour (see ds-* classes) */
+  --status-safe: #2f6b3f;           /* calm green */
+  --status-safe-tint: #e7f0e8;
+  --status-attention: #8a6116;      /* deep amber — AA on light tint */
+  --status-attention-tint: #f9efdb;
+  --status-emergency: #a02c2c;      /* deep red — loudest of the three */
+  --status-emergency-tint: #f9e7e7;
+}
+
+.dark {
+  /* Surfaces — warm charcoal, not navy */
+  --page: #22262b;
+  --panel: #2b3036;
+  --panel-2: #343a41;
+  --line: #454b52;
+
+  /* Ink */
+  --ink: #e6e8e4;             /* body — warm off-white, not blue-gray */
+  --ink-strong: #f4f5f2;      /* headings */
+  --ink-mute: #a8aea6;        /* secondary — kept light for low-vision users */
+  --ink-faint: #7d837b;       /* placeholder */
+
+  /* Brand — brighter sage for contrast on charcoal */
+  --brand: #9cc3a6;           /* links, focus, active nav (AA on panel) */
+  --brand-strong: #6f9c7e;    /* filled buttons keep near-black text? No — white text */
+  --brand-soft: #3a4a3f;      /* hover fill, selected row */
+  --brand-tint: #34423a;      /* subtle tinted background */
+
+  /* Triage status — brighter, non-neon variants for dark surfaces */
+  --status-safe: #8fc79b;
+  --status-safe-tint: #2e4234;
+  --status-attention: #e4b45e;      /* muted amber — not neon yellow */
+  --status-attention-tint: #453a26;
+  --status-emergency: #e07f7f;      /* clearly the loudest accent in dark */
+  --status-emergency-tint: #4a2b2b;
+}
+
+.dark {
+  /* Filled buttons in dark: sage surface with near-black ink for AA contrast. */
+  --brand-strong: #8fbe9c;
+  --brand-strong-ink: #1d241f;
+}
+
 /* Smooth 300ms color transitions when the theme flips. */
 body,
 header,
@@ -34,101 +108,183 @@ button {
 }
 
 ::selection {
-  background-color: #0d9488;
-  color: #ffffff;
+  background-color: var(--brand);
+  color: var(--page);
 }
 
 body {
-  /* Light mode: almost-white → very light blue gradient. */
-  background: linear-gradient(180deg, #f8fafc 0%, #eef4fb 100%);
-  color: #1e293b;
+  /* Theme-adaptive page surface (warm off-white / warm charcoal). */
+  background: var(--page);
+  color: var(--ink);
   min-height: 100vh;
 }
 
-.dark body {
-  background: #0f172a;
-  color: #e2e8f0;
-}
-
 @layer components {
-  /* ---------- Glass card (use everywhere) ---------- */
-  .glass-card {
-    border-radius: 16px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.7);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  }
-  .dark .glass-card {
-    border-color: rgba(255, 255, 255, 0.08);
-    background: rgba(30, 41, 59, 0.7);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  /* ========================================================================
+     Design-system primitives (ds-*) — the components used across all pages.
+     Panels are SOLID (no blur/glass), radius is modest, shadows are quiet.
+     ======================================================================== */
+
+  /* Panel: the standard card surface in both themes. */
+  .ds-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(38, 48, 43, 0.05);
   }
 
-  .lift-hover {
-    transition: transform 200ms ease, box-shadow 200ms ease;
+  /* Buttons — same shape/logic both themes; only variables change. */
+  .ds-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;              /* rural tap-target floor */
+    padding: 0 1.25rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: background-color 160ms ease, border-color 160ms ease,
+      color 160ms ease, transform 120ms ease;
   }
-  .lift-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+  .ds-btn:active {
+    transform: translateY(1px);
   }
-  .dark .lift-hover:hover {
-    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+  .ds-btn-primary {
+    background: var(--brand-strong);
+    color: var(--brand-strong-ink);
+    border: 1px solid transparent;
   }
-
-  /* ---------- Soft nested surface ---------- */
-  .surface-soft {
-    background: rgba(241, 245, 249, 0.7);
+  .ds-btn-primary:hover {
+    background: var(--brand);
   }
-  .dark .surface-soft {
-    background: rgba(15, 23, 42, 0.55);
+  .ds-btn-secondary {
+    background: var(--panel);
+    color: var(--brand);
+    border: 1.5px solid var(--brand);
   }
-
-  /* ---------- Buttons ---------- */
-  .btn-primary {
-    background-image: linear-gradient(to bottom right, #14b8a6, #0d9488);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
-    transition: filter 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+  .ds-btn-secondary:hover {
+    background: var(--brand-tint);
   }
-  .btn-primary:hover:not(:disabled) {
-    filter: brightness(0.94);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 22px rgba(13, 148, 136, 0.4);
-  }
-  .btn-secondary {
-    border: 1px solid #14b8a6;
-    color: #0d9488;
+  .ds-btn-ghost {
     background: transparent;
-    transition: background-color 200ms ease, transform 200ms ease;
+    color: var(--ink);
+    border: 1px solid var(--line);
   }
-  .btn-secondary:hover:not(:disabled) {
-    background: rgba(20, 184, 166, 0.1);
-    transform: translateY(-1px);
+  .ds-btn-ghost:hover {
+    background: var(--panel-2);
   }
-  .dark .btn-secondary {
-    color: #5eead4;
-  }
-  .btn-danger {
-    background-image: linear-gradient(to bottom right, #ef4444, #dc2626);
+  .ds-btn-danger {
+    background: var(--status-emergency);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
-    transition: filter 200ms ease, transform 200ms ease;
+    border: 1px solid transparent;
   }
-  .btn-danger:hover:not(:disabled) {
+  .dark .ds-btn-danger:hover {
+    color: #1d241f;
+  }
+  .ds-btn-danger:hover {
     filter: brightness(0.94);
-    transform: translateY(-1px);
   }
 
-  /* ---------- Focus-visible ring ---------- */
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible {
-    outline: 2px solid #5eead4;
-    outline-offset: 2px;
+  /* Form fields — 48px tall, visible border, clear focus. */
+  .ds-input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 0.875rem;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 1rem;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+  .ds-input::placeholder {
+    color: var(--ink-faint);
+  }
+  .ds-input:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-tint);
+  }
+
+  /* Labels — small caps, muted, readable. */
+  .ds-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-mute);
+    margin-bottom: 0.375rem;
+  }
+
+  /* =========================================================================
+     Triage severity — colour is never the only signal: every severity pairs
+     its tint background with a distinct SHAPE (circle / triangle / octagon)
+     and a text label. Emergency is visually loudest in both themes.
+     ========================================================================= */
+  .ds-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 48px;
+    padding: 0 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  .ds-status-safe {
+    background: var(--status-safe-tint);
+    color: var(--status-safe);
+    border: 1px solid color-mix(in srgb, var(--status-safe) 35%, transparent);
+  }
+  .ds-status-attention {
+    background: var(--status-attention-tint);
+    color: var(--status-attention);
+    border: 1px solid color-mix(in srgb, var(--status-attention) 40%, transparent);
+  }
+  .ds-status-emergency {
+    background: var(--status-emergency-tint);
+    color: var(--status-emergency);
+    border: 1.5px solid var(--status-emergency);
+    box-shadow: 0 2px 10px color-mix(in srgb, var(--status-emergency) 25%, transparent);
+  }
+
+  /* Severity shapes — literal geometry, recognizable without colour vision. */
+  .ds-shape {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    background: currentColor;
+  }
+  .ds-shape-circle {
+    border-radius: 9999px;
+  }
+  .ds-shape-triangle {
+    width: 20px;
+    height: 18px;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+  .ds-shape-octagon {
+    clip-path: polygon(
+      30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%
+    );
+  }
+
+  /* Toast — solid panel sliding in from the top (replaces glass-toast). */
+  .ds-toast {
+    animation: toast-in 260ms ease;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 30px rgba(38, 48, 43, 0.18);
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -12px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
   }
 
   /* ---------- Skeleton shimmer ---------- */
@@ -158,29 +314,7 @@ body {
     }
   }
 
-  /* ---------- Glass toast (slide in from top) ---------- */
-  .glass-toast {
-    animation: toast-in 260ms ease;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    background: rgba(255, 255, 255, 0.85);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  }
-  .dark .glass-toast {
-    border-color: rgba(255, 255, 255, 0.1);
-    background: rgba(30, 41, 59, 0.9);
-  }
-  @keyframes toast-in {
-    from {
-      opacity: 0;
-      transform: translateY(-12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  /* Toast animation is defined with .ds-toast above. */
 }
 
 /* Emergency escalation banner — pulsing red glow. */
@@ -216,101 +350,23 @@ body {
   }
 }
 
-/* ---------- Dark remap of legacy flat utilities ---------- */
-.dark .bg-white { background-color: #1e293b; }
-.dark .bg-slate-50 { background-color: #172033; }
-.dark .bg-slate-100 { background-color: #1e293b; }
-.dark .bg-blue-50 { background-color: rgba(13, 148, 136, 0.12); }
-.dark .bg-blue-100 { background-color: rgba(13, 148, 136, 0.2); }
-.dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.12); }
-.dark .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.2); }
-.dark .bg-sky-50 { background-color: rgba(14, 165, 233, 0.12); }
-.dark .bg-sky-100 { background-color: rgba(14, 165, 233, 0.18); }
-.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.12); }
-.dark .bg-red-100 { background-color: rgba(239, 68, 68, 0.18); }
-.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.12); }
-.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.18); }
-.dark .text-slate-800 { color: #e2e8f0; }
-.dark .text-slate-700 { color: #f1f5f9; }
-.dark .text-slate-900 { color: #f1f5f9; }
-.dark .text-slate-600 { color: #e2e8f0; }
-.dark .text-slate-500 { color: #94a3b8; }
-.dark .text-slate-400 { color: #94a3b8; }
-.dark .text-blue-900 { color: #e2e8f0; }
-.dark .text-blue-800 { color: #5eead4; }
-.dark .text-blue-700 { color: #2dd4bf; }
-.dark .text-emerald-700 { color: #34d399; }
-.dark .text-emerald-800 { color: #6ee7b7; }
-.dark .text-emerald-600 { color: #34d399; }
-.dark .text-sky-800 { color: #7dd3fc; }
-.dark .text-sky-700 { color: #7dd3fc; }
-.dark .text-red-700 { color: #fca5a5; }
-.dark .text-red-800 { color: #fca5a5; }
-.dark .text-red-600 { color: #fca5a5; }
-.dark .text-amber-800 { color: #fcd34d; }
-.dark .text-amber-600 { color: #fbbf24; }
-.dark .text-amber-900 { color: #fcd34d; }
-.dark .text-red-900 { color: #fca5a5; }
-.dark .text-red-500 { color: #f87171; }
-.dark .text-emerald-900 { color: #6ee7b7; }
-.dark .text-sky-900 { color: #7dd3fc; }
-.dark .text-sky-600 { color: #7dd3fc; }
-.dark .text-blue-600 { color: #5eead4; }
-.dark .bg-slate-200 { background-color: #334155; }
-/* Alpha-variant white tiles (appointment confirmation detail boxes) —
-   without a remap they stay white while their text turns light. */
-.dark .bg-white\/80 { background-color: rgba(30, 41, 59, 0.8); }
-.dark .bg-white\/70 { background-color: rgba(30, 41, 59, 0.7); }
-.dark .bg-white\/60 { background-color: rgba(30, 41, 59, 0.6); }
-/* Gradient stops used by tinted panels (appointment confirmation hero). */
-.dark .from-emerald-50 { --tw-gradient-from: rgba(16, 185, 129, 0.12); }
-.dark .to-emerald-100\/60 { --tw-gradient-to: rgba(16, 185, 129, 0.2); }
-.dark .ring-slate-200 { --tw-ring-color: rgba(148, 163, 184, 0.18); }
-.dark .ring-blue-200 { --tw-ring-color: rgba(45, 212, 191, 0.25); }
-.dark .ring-emerald-200 { --tw-ring-color: rgba(52, 211, 153, 0.25); }
-.dark .ring-red-200 { --tw-ring-color: rgba(252, 165, 165, 0.25); }
-.dark .ring-sky-200 { --tw-ring-color: rgba(125, 211, 252, 0.25); }
-.dark .ring-amber-200 { --tw-ring-color: rgba(252, 211, 77, 0.25); }
-.dark .border-slate-200 { border-color: rgba(148, 163, 184, 0.18); }
-.dark .border-slate-100 { border-color: rgba(148, 163, 184, 0.12); }
-
-/* Alpha-variant surfaces (bg-x-50/60 etc.) — same dark tints as their
-   opaque counterparts so tinted tiles stay readable on the navy body. */
-.dark .bg-slate-50\/80 { background-color: #172033; }
-.dark .bg-amber-50\/70 { background-color: rgba(245, 158, 11, 0.12); }
-.dark .bg-slate-200\/70 { background-color: rgba(51, 65, 85, 0.7); }
-.dark .bg-blue-50\/40 { background-color: rgba(13, 148, 136, 0.08); }
-.dark .bg-blue-50\/60 { background-color: rgba(13, 148, 136, 0.12); }
-.dark .bg-blue-50\/70 { background-color: rgba(13, 148, 136, 0.12); }
-.dark .bg-emerald-50\/50 { background-color: rgba(16, 185, 129, 0.1); }
-.dark .bg-emerald-50\/60 { background-color: rgba(16, 185, 129, 0.12); }
-.dark .bg-emerald-100\/70 { background-color: rgba(16, 185, 129, 0.2); }
-.dark .bg-amber-100\/70 { background-color: rgba(245, 158, 11, 0.18); }
-.dark .bg-sky-50\/50 { background-color: rgba(14, 165, 233, 0.1); }
-.dark .bg-sky-50\/60 { background-color: rgba(14, 165, 233, 0.12); }
-.dark .bg-sky-50\/70 { background-color: rgba(14, 165, 233, 0.12); }
-.dark .bg-red-50\/40 { background-color: rgba(239, 68, 68, 0.08); }
-.dark .bg-red-50\/50 { background-color: rgba(239, 68, 68, 0.1); }
-.dark .bg-red-50\/60 { background-color: rgba(239, 68, 68, 0.12); }
-.dark .bg-red-50\/70 { background-color: rgba(239, 68, 68, 0.12); }
-.dark .bg-red-50\/80 { background-color: rgba(239, 68, 68, 0.14); }
-.dark .bg-red-100\/70 { background-color: rgba(239, 68, 68, 0.18); }
-.dark .hover\:bg-blue-50\/40:hover { background-color: rgba(13, 148, 136, 0.08); }
-.dark .hover\:bg-blue-50:hover { background-color: rgba(13, 148, 136, 0.12); }
-.dark .hover\:bg-blue-100:hover { background-color: rgba(13, 148, 136, 0.2); }
-.dark .hover\:bg-emerald-50:hover { background-color: rgba(16, 185, 129, 0.12); }
-.dark .hover\:bg-emerald-50\/30:hover { background-color: rgba(16, 185, 129, 0.08); }
-.dark .hover\:bg-red-50:hover { background-color: rgba(239, 68, 68, 0.12); }
-.dark .hover\:bg-sky-50\/50:hover { background-color: rgba(14, 165, 233, 0.08); }
-.dark .hover\:bg-slate-50:hover { background-color: #172033; }
-.dark .hover\:bg-slate-100:hover { background-color: #334155; }
-.dark .hover\:bg-slate-100\/80:hover { background-color: rgba(51, 65, 85, 0.8); }
-.dark .hover\:bg-slate-100\/70:hover { background-color: rgba(51, 65, 85, 0.7); }
-.dark .hover\:bg-slate-200:hover { background-color: #475569; }
-.dark .hover\:bg-slate-700:hover { background-color: #475569; }
-.dark .ring-slate-100 { --tw-ring-color: rgba(148, 163, 184, 0.12); }
-.dark .ring-emerald-100 { --tw-ring-color: rgba(52, 211, 153, 0.2); }
-.dark .ring-blue-100 { --tw-ring-color: rgba(45, 212, 191, 0.2); }
-.dark .ring-red-100 { --tw-ring-color: rgba(252, 165, 165, 0.2); }
-.dark .ring-sky-100 { --tw-ring-color: rgba(125, 211, 252, 0.2); }
-.dark .ring-amber-100 { --tw-ring-color: rgba(252, 211, 77, 0.2); }
+/* --------------------------------------------------------------------------
+   Legacy-utility bridge (dark mode)
+   A few slate/neutral utilities remain on secondary surfaces (table cells,
+   empty-state text, input borders). They map to the design tokens so dark
+   mode stays warm charcoal — no navy anywhere.
+   -------------------------------------------------------------------------- */
+.dark .bg-white { background-color: var(--panel); }
+.dark .bg-slate-50 { background-color: var(--panel-2); }
+.dark .bg-slate-100 { background-color: var(--panel-2); }
+.dark .bg-slate-200 { background-color: var(--line); }
+.dark .text-slate-900 { color: var(--ink-strong); }
+.dark .text-slate-800 { color: var(--ink); }
+.dark .text-slate-700 { color: var(--ink); }
+.dark .text-slate-600 { color: var(--ink-mute); }
+.dark .text-slate-500 { color: var(--ink-mute); }
+.dark .text-slate-400 { color: var(--ink-faint); }
+.dark .border-slate-200 { border-color: var(--line); }
+.dark .border-slate-100 { border-color: var(--line); }
+.dark .ring-slate-200 { --tw-ring-color: var(--line); }
+.dark .ring-slate-100 { --tw-ring-color: var(--line); }

@@ -51,9 +51,9 @@ const BED_CATEGORIES = ["general", "icu", "maternity"] as const;
 const BED_BOX_STYLES: Record<string, string> = {
   // Dark-mode text colors are brightened per the spec: emerald-400/amber-300/
   // red-400 stay readable on the tinted dark boxes.
-  good: "bg-emerald-100/70 text-emerald-900 ring-emerald-200 dark:text-emerald-400",
-  fair: "bg-amber-100/70 text-amber-900 ring-amber-200 dark:text-amber-300",
-  low: "bg-red-100/70 text-red-900 ring-red-200 dark:text-red-400",
+  good: "bg-status-safe-tint/70 text-status-safe ring-emerald-200 dark:text-emerald-400",
+  fair: "bg-status-attention-tint/70 text-status-attention ring-amber-200 dark:text-amber-300",
+  low: "bg-status-emergency-tint/70 text-status-emergency ring-red-200 dark:text-red-400",
   na: "bg-slate-100 text-slate-400 ring-slate-200 dark:text-slate-400",
 };
 
@@ -72,9 +72,9 @@ const STATUS_EMOJI: Record<MedicineStatus, string> = {
 };
 
 const STATUS_STYLES: Record<MedicineStatus, string> = {
-  in: "bg-emerald-50 text-emerald-800 ring-emerald-200",
-  low: "bg-amber-50 text-amber-800 ring-amber-200",
-  out: "bg-red-50 text-red-800 ring-red-200",
+  in: "bg-status-safe-tint text-status-safe ring-emerald-200",
+  low: "bg-status-attention-tint text-status-attention ring-amber-200",
+  out: "bg-status-emergency-tint text-status-emergency ring-red-200",
 };
 
 const STATUS_RANK: Record<MedicineStatus, number> = { in: 0, low: 1, out: 2 };
@@ -103,9 +103,9 @@ function medicineStatus(stock: number): MedicineStatus {
 type CardTone = "good" | "fair" | "critical";
 
 const TONE_CHIP: Record<CardTone, string> = {
-  good: "bg-emerald-100 text-emerald-800 ring-emerald-300",
-  fair: "bg-amber-100 text-amber-800 ring-amber-300",
-  critical: "bg-red-100 text-red-800 ring-red-300",
+  good: "bg-status-safe-tint text-status-safe ring-emerald-300",
+  fair: "bg-status-attention-tint text-status-attention ring-amber-300",
+  critical: "bg-status-emergency-tint text-status-emergency ring-red-300",
 };
 
 const TONE_RING: Record<CardTone, string> = {
@@ -249,8 +249,8 @@ const DEMO_ALERTS: {
 ];
 
 const ALERT_ROW_STYLES: Record<"red" | "yellow", string> = {
-  red: "bg-red-50 text-red-800 ring-red-200",
-  yellow: "bg-amber-50 text-amber-900 ring-amber-200",
+  red: "bg-status-emergency-tint text-status-emergency ring-red-200",
+  yellow: "bg-status-attention-tint text-status-attention ring-amber-200",
 };
 
 export default function AvailabilityClient({ lang }: { lang: Language }) {
@@ -380,28 +380,28 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
   const statCards = [
     {
       icon: <BedDouble className="h-6 w-6" />,
-      accent: "bg-blue-100 text-blue-800",
+      accent: "bg-brand-tint text-brand",
       value: stats.totalBeds.toLocaleString("en-IN"),
       label: t.availability.totalBeds,
       sub: null as string | null,
     },
     {
       icon: <BedDouble className="h-6 w-6" />,
-      accent: "bg-emerald-100 text-emerald-700",
+      accent: "bg-status-safe-tint text-status-safe",
       value: stats.availableBeds.toLocaleString("en-IN"),
       label: t.availability.availableBeds,
       sub: null,
     },
     {
       icon: <Pill className="h-6 w-6" />,
-      accent: "bg-teal-100 text-teal-700",
+      accent: "bg-brand-tint text-brand",
       value: stats.medicineUnits.toLocaleString("en-IN"),
       label: t.availability.totalMedicines,
       sub: t.availability.unitsInStock,
     },
     {
       icon: <AlertTriangle className="h-6 w-6" />,
-      accent: "bg-red-100 text-red-700",
+      accent: "bg-status-emergency-tint text-status-emergency",
       value: stats.lowStock.toLocaleString("en-IN"),
       label: t.availability.lowStockAlerts,
       sub: null,
@@ -411,21 +411,21 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
   const qualityCards = [
     {
       icon: <Timer className="h-6 w-6" />,
-      accent: "bg-blue-100 text-blue-800",
+      accent: "bg-brand-tint text-brand",
       value: String(live.avgWaitMin),
       unit: t.availability.dashboard.minutesShort,
       label: t.availability.dashboard.avgWait,
     },
     {
       icon: <Users className="h-6 w-6" />,
-      accent: "bg-emerald-100 text-emerald-700",
+      accent: "bg-status-safe-tint text-status-safe",
       value: live.patientsToday.toLocaleString("en-IN"),
       unit: "",
       label: t.availability.dashboard.patientsToday,
     },
     {
       icon: <Send className="h-6 w-6" />,
-      accent: "bg-teal-100 text-teal-700",
+      accent: "bg-brand-tint text-brand",
       value: live.referralsCompleted.toLocaleString("en-IN"),
       unit: "",
       label: t.availability.dashboard.referralsCompleted,
@@ -448,7 +448,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
   return (
     <div className="mx-auto max-w-6xl px-6 py-10 md:py-14">
       {/* Live alert strip */}
-      <div className="glass-card p-5 md:p-6">
+      <div className="ds-panel p-5 md:p-6">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" />
@@ -459,8 +459,8 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
           </h2>
         </div>
         {DEMO_ALERTS.length === 0 ? (
-          <div className="mt-3 flex items-center gap-2.5 rounded-2xl bg-emerald-50 px-4 py-3.5 text-sm font-bold text-emerald-800 ring-1 ring-emerald-200">
-            <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+          <div className="mt-3 flex items-center gap-2.5 rounded-2xl bg-status-safe-tint px-4 py-3.5 text-sm font-bold text-status-safe ring-1 ring-emerald-200">
+            <CheckCircle2 className="h-5 w-5 shrink-0 text-status-safe" />
             {t.availability.dashboard.allOperational}
           </div>
         ) : (
@@ -491,14 +491,10 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       {/* Header */}
       <div className="mt-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
         <div className="text-center md:text-left">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200">
-            <Activity className="h-4 w-4" />
-            {t.availability.badge}
-          </span>
           <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
             {t.availability.title}
           </h1>
-          <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+          <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
             {t.availability.description}
           </p>
@@ -507,7 +503,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
         {/* Refresh */}
         <div className="flex items-center gap-3 md:pt-8">
           {updated && (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 ring-1 ring-emerald-200">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-status-safe-tint px-3 py-1.5 text-xs font-bold text-status-safe ring-1 ring-emerald-200">
               ✓ {t.availability.updated}
             </span>
           )}
@@ -515,7 +511,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
             type="button"
             onClick={handleRefresh}
             disabled={refreshing}
-            className="inline-flex items-center gap-2 rounded-xl bg-blue-800 px-5 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-blue-800/25 transition hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand-strong text-brand-strong-ink px-5 py-2.5 text-sm font-extrabold transition hover:bg-brand disabled:cursor-not-allowed disabled:opacity-60"
           >
             <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? t.availability.refreshing : t.availability.refreshData}
@@ -547,11 +543,11 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Facility health cards */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <Activity className="h-5 w-5 text-blue-800" />
+              <Activity className="h-5 w-5 text-brand" />
               {t.availability.dashboard.facilityHealth}
             </h2>
             <p className="mt-0.5 text-sm text-slate-500">
@@ -639,7 +635,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
                   <span className="text-xs font-bold text-slate-500">
                     {t.availability.dashboard.patientsServed}
                   </span>
-                  <span className="text-2xl font-extrabold leading-none text-blue-800">
+                  <span className="text-2xl font-extrabold leading-none text-brand">
                     {served}
                   </span>
                 </div>
@@ -650,18 +646,18 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Patients this week — chart */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <BarChart3 className="h-5 w-5 text-emerald-600" />
+              <BarChart3 className="h-5 w-5 text-status-safe" />
               {t.availability.dashboard.weekTitle}
             </h2>
             <p className="mt-0.5 text-sm text-slate-500">
               {t.availability.dashboard.weekSub}
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-blue-50 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-blue-800 ring-1 ring-blue-100">
+          <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-brand-tint px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-brand ring-1 ring-blue-100">
             {t.availability.dashboard.patientsUnit}
           </span>
         </div>
@@ -739,11 +735,11 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Bed grid */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <BedDouble className="h-5 w-5 text-blue-800" />
+              <BedDouble className="h-5 w-5 text-brand" />
               {t.availability.bedGridTitle}
             </h2>
             <p className="mt-0.5 text-sm text-slate-500">{t.availability.bedGridSub}</p>
@@ -837,11 +833,11 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Medicine stock table */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <Pill className="h-5 w-5 text-emerald-600" />
+              <Pill className="h-5 w-5 text-status-safe" />
               {t.availability.medicineStockTitle}
             </h2>
             <p className="mt-0.5 text-sm text-slate-500">{t.availability.medicineStockSub}</p>
@@ -873,8 +869,8 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
                     <button
                       type="button"
                       onClick={() => toggleSort(column.key)}
-                      className={`inline-flex items-center gap-1 font-bold transition hover:text-blue-800 ${
-                        sortKey === column.key ? "text-blue-800" : ""
+                      className={`inline-flex items-center gap-1 font-bold transition hover:text-brand ${
+                        sortKey === column.key ? "text-brand" : ""
                       }`}
                     >
                       {column.label}
@@ -888,7 +884,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
               {sortedRows.map((row) => (
                 <tr
                   key={`${row.facilityId}-${row.medicineName}`}
-                  className="border-b border-slate-100 transition last:border-0 hover:bg-emerald-50/30"
+                  className="border-b border-slate-100 transition last:border-0 hover:bg-status-safe-tint/30"
                 >
                   <td className="px-3 py-3">
                     <p className="font-extrabold text-slate-800">{row.medicineName}</p>
@@ -904,7 +900,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
                       <span className="font-extrabold text-slate-700">{row.stock}</span>
                       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                         <div
-                          className="h-full rounded-full bg-teal-500"
+                          className="h-full rounded-full bg-brand-tint"
                           style={{
                             width: `${Math.max(3, (row.stock / maxStock) * 100)}%`,
                           }}

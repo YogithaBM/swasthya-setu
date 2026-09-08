@@ -125,25 +125,25 @@ export default function TopNav({
   }
 
   const linkClass = (isActive: boolean) =>
-    `flex items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-semibold transition ${
+    `flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-semibold transition ${
       isActive
-        ? "bg-teal-500/90 text-white shadow-sm shadow-teal-500/30"
-        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white"
+        ? "bg-brand text-page"
+        : "text-ink-mute hover:bg-panel-2 hover:text-ink-strong"
     }`;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-white/40 bg-white/70 shadow-md shadow-slate-900/5 backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/70 dark:shadow-black/30">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-panel shadow-sm">
       <div className="flex h-16 items-center gap-3 px-4 md:px-6">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 shadow-md shadow-teal-600/30">
-            <HeartPulse className="h-5 w-5 text-white" />
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-strong text-brand-strong-ink">
+            <HeartPulse className="h-5 w-5" />
           </span>
           <span className="leading-tight">
-            <span className="block text-base font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+            <span className="block text-base font-extrabold tracking-tight text-ink-strong">
               {t.appName}
             </span>
-            <span className="mt-0.5 hidden text-[10px] font-medium tracking-wide text-slate-500 sm:block dark:text-slate-400">
+            <span className="mt-0.5 hidden text-[10px] font-medium tracking-wide text-ink-mute sm:block">
               {t.appNameRoman} · Health Bridge
             </span>
           </span>
@@ -179,7 +179,7 @@ export default function TopNav({
               {moreOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-2xl bg-white/90 py-1.5 shadow-xl ring-1 ring-slate-200 backdrop-blur-xl dark:bg-slate-800/95 dark:ring-white/10"
+                  className="absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-xl border border-line bg-panel py-1.5 shadow-lg"
                 >
                   {moreItems.map((item) => {
                     const Icon = item.icon;
@@ -191,11 +191,11 @@ export default function TopNav({
                         role="menuitem"
                         className={`flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold transition ${
                           isActive
-                            ? "bg-teal-50 text-teal-800 dark:bg-teal-500/10 dark:text-teal-300"
-                            : "text-slate-700 hover:bg-slate-100/80 dark:text-slate-200 dark:hover:bg-white/5"
+                            ? "bg-brand-tint text-brand"
+                            : "text-ink hover:bg-panel-2"
                         }`}
                       >
-                        <Icon className={`h-4 w-4 ${isActive ? "text-teal-700 dark:text-teal-300" : "text-slate-400"}`} />
+                        <Icon className={`h-4 w-4 ${isActive ? "text-brand" : "text-ink-faint"}`} />
                         {t.nav[item.labelKey]}
                       </Link>
                     );
@@ -211,7 +211,7 @@ export default function TopNav({
           {role === "doctor" && (
             <span
               title={t.doctor.doctorLabel}
-              className="hidden items-center gap-1.5 rounded-full bg-teal-500/15 px-3 py-1.5 text-xs font-bold text-teal-700 ring-1 ring-teal-500/30 sm:inline-flex dark:text-teal-300"
+              className="hidden items-center gap-1.5 rounded-lg bg-brand-tint px-3 py-1.5 text-xs font-bold text-brand sm:inline-flex"
             >
               <Stethoscope className="h-3.5 w-3.5" />
               {t.doctor.doctorName}
@@ -224,7 +224,7 @@ export default function TopNav({
             onClick={toggleTheme}
             title={t.theme}
             aria-label={t.theme}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-teal-300 dark:hover:bg-slate-700"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-panel-2 text-ink transition hover:bg-brand-soft hover:text-brand"
           >
             {theme === "dark" ? (
               <Sun className="h-4 w-4" />
@@ -238,7 +238,7 @@ export default function TopNav({
             onClick={onLogout}
             title={t.logout}
             aria-label={t.logout}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-slate-200 bg-white/60 px-3 text-xs font-bold text-slate-700 transition hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-slate-200 dark:hover:bg-white/10"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-line bg-panel px-3 text-xs font-bold text-ink transition hover:bg-panel-2"
           >
             <LogOut className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{t.logout}</span>
@@ -249,7 +249,7 @@ export default function TopNav({
             onClick={toggleLanguage}
             title={t.switchTo}
             aria-label={`${t.language}: ${lang === "hi" ? "हिन्दी" : "English"}. ${t.switchTo}`}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-gradient-to-br from-teal-500 to-teal-600 px-3.5 text-xs font-extrabold text-white shadow-md shadow-teal-600/25 transition hover:shadow-lg"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-brand-strong px-3.5 text-xs font-extrabold text-brand-strong-ink transition hover:bg-brand"
           >
             <span aria-hidden="true">🌐</span>
             {lang === "hi" ? "हिन्दी" : "English"}
@@ -261,7 +261,7 @@ export default function TopNav({
             onClick={() => setMenuOpen((open) => !open)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700 transition hover:bg-slate-200 lg:hidden dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-panel-2 text-ink transition hover:bg-brand-soft hover:text-brand lg:hidden"
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -270,7 +270,7 @@ export default function TopNav({
 
       {/* Mobile dropdown */}
       {menuOpen && (
-        <nav className="max-h-[calc(100vh-4rem)] space-y-1 overflow-y-auto border-t border-slate-200/70 bg-white/85 px-4 pb-4 pt-2 shadow-xl backdrop-blur-xl lg:hidden dark:border-white/10 dark:bg-slate-900/95">
+        <nav className="max-h-[calc(100vh-4rem)] space-y-1 overflow-y-auto border-t border-line bg-panel px-4 pb-4 pt-2 shadow-lg lg:hidden">
           {items.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -279,16 +279,16 @@ export default function TopNav({
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
+                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold transition ${
                   isActive
-                    ? "bg-teal-500/90 text-white shadow-sm shadow-teal-500/30"
-                    : "text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
+                    ? "bg-brand text-page"
+                    : "text-ink hover:bg-panel-2"
                 }`}
               >
                 <Icon className="h-5 w-5 shrink-0" />
                 <span className="truncate">{t.nav[item.labelKey]}</span>
                 {isActive && (
-                  <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-teal-400" />
+                  <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-page" />
                 )}
               </Link>
             );

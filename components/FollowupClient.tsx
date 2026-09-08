@@ -12,9 +12,9 @@ type DueStatus = "overdue" | "today" | "upcoming";
 const DUE_RANK: Record<DueStatus, number> = { overdue: 0, today: 1, upcoming: 2 };
 
 const STATUS_STYLES: Record<DueStatus, string> = {
-  overdue: "bg-red-50 text-red-700 ring-red-200",
-  today: "bg-amber-50 text-amber-800 ring-amber-200",
-  upcoming: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  overdue: "bg-status-emergency-tint text-status-emergency ring-red-200",
+  today: "bg-status-attention-tint text-status-attention ring-amber-200",
+  upcoming: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 const ROW_ACCENT: Record<DueStatus, string> = {
@@ -77,14 +77,10 @@ export default function FollowupClient({ lang }: { lang: Language }) {
     <div className="mx-auto max-w-5xl px-6 py-10 md:py-14">
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-800 ring-1 ring-blue-200">
-          <CalendarClock className="h-4 w-4" />
-          {t.followup.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.followup.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.followup.description}
         </p>
@@ -104,7 +100,7 @@ export default function FollowupClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Table */}
-      <div className="mt-6 glass-card p-6 md:p-8">
+      <div className="mt-6 ds-panel p-6 md:p-8">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-left text-sm">
             <thead>
@@ -123,7 +119,7 @@ export default function FollowupClient({ lang }: { lang: Language }) {
                 return (
                   <tr
                     key={followup.id}
-                    className={`border-l-4 ${ROW_ACCENT[status]} border-b border-slate-100 transition last:border-0 hover:bg-blue-50/40`}
+                    className={`border-l-4 ${ROW_ACCENT[status]} border-b border-slate-100 transition last:border-0 hover:bg-brand-tint/40`}
                   >
                     <td className="px-3 py-3 font-extrabold text-slate-800">
                       {followup.patientName}
@@ -133,7 +129,7 @@ export default function FollowupClient({ lang }: { lang: Language }) {
                     </td>
                     <td className="px-3 py-3">
                       <span className="inline-flex items-center gap-1.5 font-bold text-slate-700">
-                        <CalendarClock className="h-3.5 w-3.5 text-blue-700" />
+                        <CalendarClock className="h-3.5 w-3.5 text-brand" />
                         {formatDate(followup.followUpDate)}
                       </span>
                     </td>

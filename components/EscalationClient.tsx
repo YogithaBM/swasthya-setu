@@ -18,8 +18,8 @@ import {
 import { getTranslations, translations, type Language } from "@/lib/translations";
 
 const STATUS_STYLES: Record<Emergency["status"], string> = {
-  escalated: "bg-red-50 text-red-700 ring-red-200",
-  resolved: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  escalated: "bg-status-emergency-tint text-status-emergency ring-red-200",
+  resolved: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 export default function EscalationClient({ lang }: { lang: Language }) {
@@ -59,7 +59,7 @@ export default function EscalationClient({ lang }: { lang: Language }) {
       {toast && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-emerald-700 dark:text-emerald-300"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 ds-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-status-safe "
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {toast}
@@ -68,14 +68,10 @@ export default function EscalationClient({ lang }: { lang: Language }) {
 
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-red-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-red-700 ring-1 ring-red-200">
-          <Siren className="h-4 w-4" />
-          {t.escalation.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.escalation.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.escalation.description}
         </p>
@@ -83,11 +79,11 @@ export default function EscalationClient({ lang }: { lang: Language }) {
 
       {/* Summary counts */}
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl bg-red-50 p-5 text-red-700 ring-1 ring-red-200">
+        <div className="rounded-2xl bg-status-emergency-tint p-5 text-status-emergency ring-1 ring-red-200">
           <p className="text-3xl font-black">{escalatedCount}</p>
           <p className="mt-0.5 text-sm font-extrabold">{t.escalation.statusEscalated}</p>
         </div>
-        <div className="rounded-2xl bg-emerald-50 p-5 text-emerald-700 ring-1 ring-emerald-200">
+        <div className="rounded-2xl bg-status-safe-tint p-5 text-status-safe ring-1 ring-emerald-200">
           <p className="text-3xl font-black">{resolvedCount}</p>
           <p className="mt-0.5 text-sm font-extrabold">{t.escalation.statusResolved}</p>
         </div>
@@ -131,11 +127,11 @@ export default function EscalationClient({ lang }: { lang: Language }) {
                   </p>
                   <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-bold text-slate-500">
                     <span className="inline-flex items-center gap-1">
-                      <MapPin className="h-3.5 w-3.5 text-red-500" />
+                      <MapPin className="h-3.5 w-3.5 text-status-emergency" />
                       {facility?.name ?? emergency.facility}
                     </span>
                     <span className="inline-flex items-center gap-1">
-                      <PhoneCall className="h-3.5 w-3.5 text-blue-600" />
+                      <PhoneCall className="h-3.5 w-3.5 text-brand" />
                       {formatTime(emergency.timestamp)}
                     </span>
                     {emergency.phone && (

@@ -32,9 +32,9 @@ const LEVEL_ORDER: FacilityLevel[] = [
 ];
 
 const BED_STATUS_STYLES: Record<BedFreeStatus, string> = {
-  good: "bg-emerald-50 text-emerald-800 ring-emerald-200",
-  fair: "bg-amber-50 text-amber-800 ring-amber-200",
-  low: "bg-red-50 text-red-800 ring-red-200",
+  good: "bg-status-safe-tint text-status-safe ring-emerald-200",
+  fair: "bg-status-attention-tint text-status-attention ring-amber-200",
+  low: "bg-status-emergency-tint text-status-emergency ring-red-200",
 };
 
 const BED_STATUS_DOTS: Record<BedFreeStatus, string> = {
@@ -79,14 +79,10 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
     <div className="mx-auto max-w-6xl px-6 py-10 md:py-14">
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-800 ring-1 ring-blue-200">
-          <MapPin className="h-4 w-4" />
-          {t.facilities.badge}
-        </span>
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
+        <h1 className="text-3xl font-extrabold tracking-tight text-ink-strong md:text-5xl">
           {t.facilities.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.facilities.description}
         </p>
@@ -95,25 +91,25 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
       {/* Network summary */}
       <div className="mt-8 flex flex-wrap justify-center gap-2">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-extrabold text-slate-700 ring-1 ring-slate-200">
-          <MapPin className="h-4 w-4 text-blue-700" />
+          <MapPin className="h-4 w-4 text-brand" />
           {summary.facilityCount} {t.stats.facilities}
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-extrabold text-slate-700 ring-1 ring-slate-200">
-          <BedDouble className="h-4 w-4 text-emerald-600" />
+          <BedDouble className="h-4 w-4 text-status-safe" />
           {summary.availableSum}/{summary.totalBedsSum} {t.triage.bedsAvailable}
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-sm font-extrabold text-slate-700 ring-1 ring-slate-200">
-          <Stethoscope className="h-4 w-4 text-blue-700" />
+          <Stethoscope className="h-4 w-4 text-brand" />
           {summary.doctorSum} {t.stats.doctors}
         </span>
       </div>
 
       {/* Map card */}
-      <div className="mt-8 glass-card p-4 md:p-6">
+      <div className="mt-8 ds-panel p-4 md:p-6">
         <div className="flex items-start justify-between gap-4 px-2 pb-4 pt-1">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <MapPin className="h-5 w-5 text-blue-800" />
+              <MapPin className="h-5 w-5 text-brand" />
               {t.facilities.mapTitle}
             </h2>
             <p className="mt-0.5 text-sm text-slate-500">{t.facilities.mapSub}</p>
@@ -145,11 +141,11 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
       </div>
 
       {/* Table card */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <Hospital className="h-5 w-5 text-emerald-600" />
+              <Hospital className="h-5 w-5 text-status-safe" />
               {t.facilities.tableTitle}
             </h2>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5">
@@ -222,7 +218,7 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
                 return (
                   <tr
                     key={facility.id}
-                    className="border-b border-slate-100 transition last:border-0 hover:bg-blue-50/40"
+                    className="border-b border-slate-100 transition last:border-0 hover:bg-brand-tint/40"
                   >
                     <td className="px-3 py-3.5">
                       <p className="font-extrabold text-slate-800">{facility.name}</p>
@@ -268,7 +264,7 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
                         {extraMedicines > 0 && (
                           <span
                             title={`+${extraMedicines} more medicines`}
-                            className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-extrabold text-blue-700"
+                            className="rounded-md bg-brand-tint px-2 py-0.5 text-[11px] font-extrabold text-brand"
                           >
                             +{extraMedicines}
                           </span>

@@ -31,9 +31,9 @@ import { SEVERITY_EMOJI, SEVERITY_LABELS } from "@/lib/triage";
 import { getTranslations, translations, type Language } from "@/lib/translations";
 
 const SEVERITY_CHIP_STYLES: Record<PatientRecord["severity"], string> = {
-  red: "bg-red-50 text-red-700 ring-red-200",
-  yellow: "bg-amber-50 text-amber-800 ring-amber-200",
-  green: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  red: "bg-status-emergency-tint text-status-emergency ring-red-200",
+  yellow: "bg-status-attention-tint text-status-attention ring-amber-200",
+  green: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 /** Local YYYY-MM-DD for "upcoming" filtering. */
@@ -207,7 +207,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
       {phoneError && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-red-600 dark:text-red-400"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 ds-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-status-emergency "
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {phoneError}
@@ -216,21 +216,17 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
 
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200">
-          <FileText className="h-4 w-4" />
-          {t.myRecords.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.myRecords.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.myRecords.description}
         </p>
       </div>
 
       {/* Phone lookup card */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <label className="block">
           <span className="text-sm font-bold text-slate-600">
             {t.myRecords.phoneLabel}
@@ -255,7 +251,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
               type="button"
               onClick={handleSearch}
               disabled={phone.length !== 10}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-800 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue-800/25 transition hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-strong text-brand-strong-ink px-6 py-3 text-sm font-extrabold  transition hover:bg-brand disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Search className="h-4 w-4" />
               {t.myRecords.findRecords}
@@ -285,13 +281,13 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           )}
 
           {/* Appointments */}
-          <section className="glass-card p-6">
+          <section className="ds-panel p-6">
             <div className="flex items-center gap-2">
-              <CalendarDays className="h-4 w-4 text-blue-700" />
+              <CalendarDays className="h-4 w-4 text-brand" />
               <h2 className="text-sm font-extrabold text-slate-800">
                 {t.myRecords.appointmentsSection}
               </h2>
-              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-black text-blue-800 ring-1 ring-blue-200">
+              <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[11px] font-black text-brand ring-1 ring-blue-200">
                 {appointments.length}
               </span>
             </div>
@@ -304,23 +300,23 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                 {appointments.map((appointment) => (
                   <li
                     key={appointment.id}
-                    className="flex flex-wrap items-center gap-2 rounded-xl bg-blue-50/60 px-4 py-3 ring-1 ring-blue-100"
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-brand-tint/60 px-4 py-3 ring-1 ring-blue-100"
                   >
-                    <CalendarDays className="h-4 w-4 shrink-0 text-blue-700" />
+                    <CalendarDays className="h-4 w-4 shrink-0 text-brand" />
                     <span className="text-sm font-extrabold text-slate-800">
                       {formatLongDate(appointment.date)} · {appointment.time}
                     </span>
                     <span className="text-xs font-bold text-slate-600">
                       {getFacilityById(appointment.facility)?.name ?? appointment.facility}
                     </span>
-                    <span className="rounded-lg bg-blue-50 px-1.5 py-0.5 text-xs font-black text-blue-800 ring-1 ring-blue-200">
+                    <span className="rounded-lg bg-brand-tint px-1.5 py-0.5 text-xs font-black text-brand ring-1 ring-blue-200">
                       #{appointment.queueNumber}
                     </span>
                     <span
                       className={`ml-auto inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-extrabold ring-1 ${
                         appointment.status === "Waiting"
-                          ? "bg-amber-50 text-amber-800 ring-amber-200"
-                          : "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                          ? "bg-status-attention-tint text-status-attention ring-amber-200"
+                          : "bg-status-safe-tint text-status-safe ring-emerald-200"
                       }`}
                     >
                       {appointment.status === "Waiting"
@@ -334,13 +330,13 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Past visits + prescriptions */}
-          <section className="glass-card p-6">
+          <section className="ds-panel p-6">
             <div className="flex items-center gap-2">
-              <FileText className="h-4 w-4 text-blue-700" />
+              <FileText className="h-4 w-4 text-brand" />
               <h2 className="text-sm font-extrabold text-slate-800">
                 {t.myRecords.visitsSection}
               </h2>
-              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-black text-blue-800 ring-1 ring-blue-200">
+              <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[11px] font-black text-brand ring-1 ring-blue-200">
                 {history.length}
               </span>
             </div>
@@ -357,7 +353,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                   >
                     <div className="flex items-center justify-between gap-2">
                       <p className="flex items-center gap-2 text-sm font-extrabold text-slate-800">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-black text-blue-800">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-tint text-[11px] font-black text-brand">
                           {history.length - index}
                         </span>
                         {formatLongDate(record.date)}
@@ -396,13 +392,13 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Upcoming follow-ups */}
-          <section className="glass-card p-6">
+          <section className="ds-panel p-6">
             <div className="flex items-center gap-2">
-              <CalendarClock className="h-4 w-4 text-blue-700" />
+              <CalendarClock className="h-4 w-4 text-brand" />
               <h2 className="text-sm font-extrabold text-slate-800">
                 {t.myRecords.followupsSection}
               </h2>
-              <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-black text-blue-800 ring-1 ring-blue-200">
+              <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[11px] font-black text-brand ring-1 ring-blue-200">
                 {upcomingFollowups.length}
               </span>
             </div>
@@ -415,9 +411,9 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                 {upcomingFollowups.map((followup) => (
                   <li
                     key={followup.id}
-                    className="flex flex-wrap items-center gap-2 rounded-xl bg-blue-50/60 px-4 py-3 ring-1 ring-blue-100"
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-brand-tint/60 px-4 py-3 ring-1 ring-blue-100"
                   >
-                    <CalendarClock className="h-4 w-4 shrink-0 text-blue-700" />
+                    <CalendarClock className="h-4 w-4 shrink-0 text-brand" />
                     <span className="text-sm font-extrabold text-slate-800">
                       {formatLongDate(followup.followUpDate)}
                     </span>
@@ -434,17 +430,17 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Lab tests */}
-          <section className="glass-card p-6">
+          <section className="ds-panel p-6">
             <div className="flex items-center gap-2">
-              <Microscope className="h-4 w-4 text-sky-700" />
+              <Microscope className="h-4 w-4 text-ink-mute" />
               <h2 className="text-sm font-extrabold text-slate-800">
                 {t.myRecords.labsSection}
               </h2>
-              <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-black text-sky-800 ring-1 ring-sky-200">
+              <span className="rounded-full bg-panel-2 px-2 py-0.5 text-[11px] font-black text-ink-mute ring-1 ring-sky-200">
                 {labs.length}
               </span>
               {pendingLabs.length > 0 && (
-                <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-black text-amber-800 ring-1 ring-amber-200">
+                <span className="rounded-full bg-status-attention-tint px-2 py-0.5 text-[11px] font-black text-status-attention ring-1 ring-amber-200">
                   {pendingLabs.length} {t.myRecords.labStatusPending}
                 </span>
               )}
@@ -458,17 +454,17 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                 {labs.map((order) => (
                   <li
                     key={order.id}
-                    className="flex flex-wrap items-center gap-2 rounded-xl bg-sky-50/60 px-4 py-3 ring-1 ring-sky-100"
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-panel-2/60 px-4 py-3 ring-1 ring-sky-100"
                   >
-                    <FlaskConical className="h-4 w-4 shrink-0 text-sky-700" />
+                    <FlaskConical className="h-4 w-4 shrink-0 text-ink-mute" />
                     <span className="text-sm font-extrabold text-slate-800">
                       {order.testName}
                     </span>
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-extrabold ring-1 ${
                         order.status === "Pending"
-                          ? "bg-amber-50 text-amber-800 ring-amber-200"
-                          : "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                          ? "bg-status-attention-tint text-status-attention ring-amber-200"
+                          : "bg-status-safe-tint text-status-safe ring-emerald-200"
                       }`}
                     >
                       {order.status === "Pending"
@@ -490,13 +486,13 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Active referrals */}
-          <section className="glass-card p-6">
+          <section className="ds-panel p-6">
             <div className="flex items-center gap-2">
-              <ArrowLeftRight className="h-4 w-4 text-red-600" />
+              <ArrowLeftRight className="h-4 w-4 text-status-emergency" />
               <h2 className="text-sm font-extrabold text-slate-800">
                 {t.myRecords.referralsSection}
               </h2>
-              <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-black text-red-700 ring-1 ring-red-200">
+              <span className="rounded-full bg-status-emergency-tint px-2 py-0.5 text-[11px] font-black text-status-emergency ring-1 ring-red-200">
                 {activeReferrals.length}
               </span>
             </div>
@@ -509,9 +505,9 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                 {activeReferrals.map((referral) => (
                   <li
                     key={referral.id}
-                    className="flex flex-wrap items-center gap-2 rounded-xl bg-red-50/60 px-4 py-3 ring-1 ring-red-100"
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-status-emergency-tint/60 px-4 py-3 ring-1 ring-red-100"
                   >
-                    <ArrowLeftRight className="h-4 w-4 shrink-0 text-red-600" />
+                    <ArrowLeftRight className="h-4 w-4 shrink-0 text-status-emergency" />
                     <span className="text-sm font-extrabold text-slate-800">
                       {getFacilityById(referral.fromFacility)?.name ?? referral.fromFacility}
                       {" → "}
@@ -520,8 +516,8 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                     <span
                       className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-extrabold ring-1 ${
                         referral.status === "Pending"
-                          ? "bg-amber-50 text-amber-800 ring-amber-200"
-                          : "bg-sky-50 text-sky-800 ring-sky-200"
+                          ? "bg-status-attention-tint text-status-attention ring-amber-200"
+                          : "bg-panel-2 text-ink-mute ring-sky-200"
                       }`}
                     >
                       {referral.status}
@@ -536,13 +532,13 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           </section>
 
           {/* Emergency escalations */}
-          <section className="glass-card p-6">
+          <section className="ds-panel p-6">
             <div className="flex items-center gap-2">
               <span aria-hidden="true">🚨</span>
               <h2 className="text-sm font-extrabold text-slate-800">
                 {t.myRecords.emergenciesSection}
               </h2>
-              <span className="rounded-full bg-red-50 px-2 py-0.5 text-[11px] font-black text-red-700 ring-1 ring-red-200">
+              <span className="rounded-full bg-status-emergency-tint px-2 py-0.5 text-[11px] font-black text-status-emergency ring-1 ring-red-200">
                 {emergencies.length}
               </span>
             </div>
@@ -555,9 +551,9 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                 {emergencies.map((emergency) => (
                   <li
                     key={emergency.id}
-                    className="flex flex-wrap items-center gap-2 rounded-xl bg-red-50/60 px-4 py-2.5 ring-1 ring-red-100"
+                    className="flex flex-wrap items-center gap-2 rounded-xl bg-status-emergency-tint/60 px-4 py-2.5 ring-1 ring-red-100"
                   >
-                    <span className="text-xs font-bold text-red-700">
+                    <span className="text-xs font-bold text-status-emergency">
                       {new Date(emergency.timestamp).toLocaleString(
                         lang === "hi" ? "hi-IN" : "en-IN"
                       )}
@@ -568,8 +564,8 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                     <span
                       className={`ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-extrabold ring-1 ${
                         emergency.status === "escalated"
-                          ? "bg-red-50 text-red-700 ring-red-200"
-                          : "bg-emerald-50 text-emerald-700 ring-emerald-200"
+                          ? "bg-status-emergency-tint text-status-emergency ring-red-200"
+                          : "bg-status-safe-tint text-status-safe ring-emerald-200"
                       }`}
                     >
                       {emergency.status === "escalated"

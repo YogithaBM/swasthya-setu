@@ -1,44 +1,49 @@
 import {
-  AlertTriangle,
   Ambulance,
-  CheckCircle2,
   Lightbulb,
-  Siren,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 
 import {
   FACILITY_EN_LABELS,
-  SEVERITY_EMOJI,
   SEVERITY_LABELS,
   type TriageResultData,
   type TriageSeverity,
 } from "@/lib/triage";
 import { getTranslations, type Language } from "@/lib/translations";
 
+/**
+ * Triage result — the most consequential surface in the app, so it follows
+ * the "shape + colour + label" rule strictly: circle = safe, triangle =
+ * attention, octagon = emergency. Emergency is visually loudest in both
+ * themes (heaviest border + shadow).
+ */
 interface SeverityStyle {
-  card: string;
-  iconBg: string;
+  /** Shape class from the design system. */
+  shape: string;
+  /** Icon shown in the facility strip (literal, not decorative). */
   icon: LucideIcon;
 }
 
 const SEVERITY_STYLES: Record<TriageSeverity, SeverityStyle> = {
   green: {
-    card: "bg-gradient-to-br from-emerald-500 via-emerald-600 to-emerald-700 shadow-emerald-500/30",
-    iconBg: "bg-white/20",
-    icon: CheckCircle2,
+    shape: "ds-shape-circle",
+    icon: Ambulance,
   },
   yellow: {
-    card: "bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 shadow-amber-500/30",
-    iconBg: "bg-white/25",
-    icon: AlertTriangle,
+    shape: "ds-shape-triangle",
+    icon: Ambulance,
   },
   red: {
-    card: "bg-gradient-to-br from-red-500 via-red-600 to-rose-700 shadow-red-500/30",
-    iconBg: "bg-white/20",
-    icon: Siren,
+    shape: "ds-shape-octagon",
+    icon: Ambulance,
   },
+};
+
+const STATUS_CLASS: Record<TriageSeverity, string> = {
+  green: "ds-status-safe",
+  yellow: "ds-status-attention",
+  red: "ds-status-emergency",
 };
 
 interface TriageResultProps {
@@ -51,80 +56,65 @@ export default function TriageResult({ result, source, lang }: TriageResultProps
   const t = getTranslations(lang);
   const { severity } = result;
   const style = SEVERITY_STYLES[severity];
-  const StatusIcon = style.icon;
   const severityLabel = SEVERITY_LABELS[severity][lang];
 
   return (
     <div
-      className={`overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/30 ${style.card}`}
+      className={`ds-panel overflow-hidden border-2 ${STATUS_CLASS[severity]} flex-col items-stretch gap-0 p-6 md:p-8`}
       role="alert"
     >
-      {/* Header: emoji + severity label + source badge */}
-      <div className="flex flex-wrap items-center justify-between gap-4 px-6 pt-7 md:px-10 md:pt-9">
-        <div className="flex items-center gap-4">
-          <span className="text-4xl md:text-5xl" aria-hidden="true">
-            {SEVERITY_EMOJI[severity]}
-          </span>
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-white/80">
+      {/* Header: severity shape + bilingual label + source */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <span className={`ds-status ${STATUS_CLASS[severity]} -m-2 border-0 bg-transparent p-0`}>
+          <span className={`ds-shape ${style.shape}`} />
+          <span>
+            <span className="block text-[11px] font-bold uppercase tracking-widest opacity-75">
               {t.triage.resultLabel}
-            </p>
-            <h2 className="mt-0.5 text-3xl font-extrabold leading-tight text-white md:text-5xl">
+            </span>
+            <span className="block text-3xl font-extrabold leading-tight md:text-4xl">
               {severityLabel}
-            </h2>
-          </div>
-        </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white">
-          <Sparkles className="h-3.5 w-3.5" />
+            </span>
+          </span>
+        </span>
+        <span className="rounded-md bg-panel-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-ink-mute">
           {source === "gemini" ? t.triage.sourceGemini : t.triage.sourceOffline}
         </span>
       </div>
 
-      <div className="px-6 pb-8 pt-6 md:px-10 md:pb-10">
+      <div className="mt-5 space-y-3">
         {/* Recommended facility strip */}
-        <div className="flex flex-wrap items-center gap-4 rounded-2xl bg-white/15 p-4 backdrop-blur-sm md:p-5">
-          <div
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${style.iconBg}`}
-          >
-            <StatusIcon className="h-6 w-6 text-white" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-white/80">
-              {t.triage.recommendedFacility}
-            </p>
-            <p className="mt-0.5 text-lg font-extrabold leading-tight text-white md:text-xl">
-              {FACILITY_EN_LABELS[result.facility_level]}
-              <span className="ml-2 text-sm font-semibold text-white/85">
-                · {t.levels[result.facility_level]}
-              </span>
-            </p>
-          </div>
+        <div className="rounded-lg border border-line bg-panel-2 p-4">
+          <p className="ds-label">{t.triage.recommendedFacility}</p>
+          <p className="text-lg font-extrabold leading-tight text-ink-strong">
+            {FACILITY_EN_LABELS[result.facility_level]}
+            <span className="ml-2 text-sm font-semibold text-ink-mute">
+              · {t.levels[result.facility_level]}
+            </span>
+          </p>
         </div>
 
         {/* Reason */}
-        <div className="mt-4 rounded-2xl bg-white/15 p-5 backdrop-blur-sm">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-white/80">
-            {t.triage.reason}
-          </p>
-          <p className="mt-1.5 text-base font-medium leading-relaxed text-white">
+        <div className="rounded-lg border border-line bg-panel-2 p-4">
+          <p className="ds-label">{t.triage.reason}</p>
+          <p className="text-base font-medium leading-relaxed text-ink">
             {result.reason}
           </p>
         </div>
 
         {/* Quick advice */}
-        <div className="mt-4 rounded-2xl bg-white/15 p-5 backdrop-blur-sm">
-          <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-white/80">
+        <div className="rounded-lg border border-line bg-panel-2 p-4">
+          <p className="ds-label flex items-center gap-2">
             <Lightbulb className="h-4 w-4" />
             {t.triage.advice}
           </p>
-          <p className="mt-1.5 text-base leading-relaxed text-white">{result.advice}</p>
+          <p className="text-base leading-relaxed text-ink">{result.advice}</p>
         </div>
 
-        {/* Emergency strip (red only) */}
+        {/* Emergency strip (red only) — loudest element on the page */}
         {severity === "red" && (
-          <div className="mt-4 flex items-center gap-3 rounded-2xl bg-red-950/40 p-4 ring-1 ring-red-200/40">
-            <Ambulance className="h-6 w-6 shrink-0 text-red-100" />
-            <p className="text-sm font-bold leading-relaxed text-red-50">
+          <div className="flex items-center gap-3 rounded-lg border-2 border-status-emergency bg-status-emergency-tint p-4">
+            <Ambulance className="h-6 w-6 shrink-0 text-status-emergency" />
+            <p className="text-sm font-bold leading-relaxed text-status-emergency">
               {t.triage.emergencyStrip}
             </p>
           </div>

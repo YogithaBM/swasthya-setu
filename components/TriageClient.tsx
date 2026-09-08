@@ -17,17 +17,17 @@ import TriageResult from "@/components/TriageResult";
 import { addEmergency } from "@/lib/emergencies";
 import { availableBeds, facilities, totalBeds } from "@/lib/data";
 import {
-  SEVERITY_EMOJI,
   SEVERITY_LABELS,
   SEVERITY_TO_LEVEL,
   type TriageResponse,
 } from "@/lib/triage";
 import { getTranslations, translations, type Language } from "@/lib/translations";
 
-const LEGEND_STYLES: Record<string, string> = {
-  green: "bg-emerald-50 ring-emerald-200 text-emerald-900",
-  yellow: "bg-amber-50 ring-amber-200 text-amber-900",
-  red: "bg-red-50 ring-red-200 text-red-900",
+/** Legend chips — shape + colour + label per the design system. */
+const LEGEND_STYLES: Record<string, { status: string; shape: string }> = {
+  green: { status: "ds-status-safe", shape: "ds-shape-circle" },
+  yellow: { status: "ds-status-attention", shape: "ds-shape-triangle" },
+  red: { status: "ds-status-emergency", shape: "ds-shape-octagon" },
 };
 
 export default function TriageClient({ lang }: { lang: Language }) {
@@ -121,52 +121,46 @@ export default function TriageClient({ lang }: { lang: Language }) {
     <div className="mx-auto max-w-4xl px-6 py-10 md:py-14">
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200">
-          <Stethoscope className="h-4 w-4" />
-          {t.triage.badge}
-        </span>
-        <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
+        <h1 className="text-3xl font-extrabold tracking-tight text-ink-strong md:text-5xl">
           {t.triage.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
-        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-ink-mute md:text-base">
           {t.triage.description}
         </p>
       </div>
 
-      {/* Severity legend */}
+      {/* Severity legend — shape + colour + label together */}
       <div className="mt-8 grid gap-3 sm:grid-cols-3">
         {(Object.keys(SEVERITY_TO_LEVEL) as (keyof typeof SEVERITY_TO_LEVEL)[]).map(
           (severity) => (
             <div
               key={severity}
-              className={`flex items-center gap-3 rounded-2xl p-4 ring-1 ${LEGEND_STYLES[severity]}`}
+              className={`ds-status ${LEGEND_STYLES[severity].status} justify-center`}
             >
-              <span className="text-2xl" aria-hidden="true">
-                {SEVERITY_EMOJI[severity]}
-              </span>
-              <div>
-                <p className="text-sm font-extrabold">
+              <span className={`ds-shape ${LEGEND_STYLES[severity].shape}`} />
+              <span>
+                <span className="block text-sm font-extrabold">
                   {SEVERITY_LABELS[severity][lang]}
-                </p>
-                <p className="text-xs opacity-80">
+                </span>
+                <span className="block text-xs font-semibold opacity-80">
                   → {t.levels[SEVERITY_TO_LEVEL[severity]]}
-                </p>
-              </div>
+                </span>
+              </span>
             </div>
           )
         )}
       </div>
 
       {/* Input card */}
-      <div className="glass-card mt-6 p-6 md:p-8">
+      <div className="ds-panel mt-6 p-6 md:p-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand">
             <Stethoscope className="h-6 w-6" />
           </div>
           <div>
-            <h2 className="font-bold text-slate-800">{t.triage.inputTitle}</h2>
-            <p className="text-sm text-slate-500">{t.triage.inputHint}</p>
+            <h2 className="font-bold text-ink-strong">{t.triage.inputTitle}</h2>
+            <p className="text-sm text-ink-mute">{t.triage.inputHint}</p>
           </div>
         </div>
 
@@ -175,17 +169,17 @@ export default function TriageClient({ lang }: { lang: Language }) {
           onChange={(event) => setSymptoms(event.target.value)}
           rows={5}
           placeholder={t.triage.placeholder}
-          className="mt-5 w-full resize-y rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-base text-slate-800 placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+          className="ds-input mt-5 resize-y py-3.5"
         />
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400">{t.triage.examplesLabel}</span>
+          <span className="text-xs font-semibold text-ink-faint">{t.triage.examplesLabel}</span>
           {t.triage.examples.map((example) => (
             <button
               key={example}
               type="button"
               onClick={() => setSymptoms(example)}
-              className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-800 transition hover:bg-blue-100"
+              className="rounded-md bg-panel-2 px-3 py-2 text-xs font-semibold text-ink transition hover:bg-brand-soft hover:text-brand"
             >
               {example}
             </button>
@@ -196,7 +190,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
           type="button"
           onClick={handleSubmit}
           disabled={!symptoms.trim() || loading}
-          className="btn-primary mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          className="ds-btn ds-btn-primary mt-6 w-full sm:w-auto"
         >
           {loading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -209,11 +203,11 @@ export default function TriageClient({ lang }: { lang: Language }) {
 
       {/* Loading state — skeleton shimmer */}
       {loading && (
-        <div className="glass-card mt-8 p-10 text-center">
-          <p className="text-lg font-extrabold text-slate-800 dark:text-slate-100">
+        <div className="ds-panel mt-8 p-10 text-center">
+          <p className="text-lg font-extrabold text-ink-strong">
             {t.triage.loadingTitle}
           </p>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-sm text-ink-mute">
             {slowLoading ? t.triage.loadingQuickSub : t.triage.loadingSub}
           </p>
           <div className="mx-auto mt-6 max-w-md space-y-2.5">
@@ -226,9 +220,9 @@ export default function TriageClient({ lang }: { lang: Language }) {
 
       {/* Error state */}
       {error && !loading && (
-        <div className="glass-card mt-8 bg-red-50/80 p-6 dark:bg-red-950/40">
-          <p className="font-extrabold text-red-700">{t.triage.errorTitle}</p>
-          <p className="mt-1 text-sm text-red-600">{error}</p>
+        <div className="ds-panel mt-8 border-status-emergency p-6">
+          <p className="font-extrabold text-status-emergency">{t.triage.errorTitle}</p>
+          <p className="mt-1 text-sm text-status-emergency">{error}</p>
         </div>
       )}
 
@@ -239,51 +233,48 @@ export default function TriageClient({ lang }: { lang: Language }) {
           {result.result.severity === "red" && escalatedTo && (
             <div
               role="alert"
-              className="emergency-banner relative mb-4 overflow-hidden rounded-2xl bg-red-600 p-4 text-white shadow-lg shadow-red-600/30"
+              className="emergency-banner relative mb-4 flex flex-wrap items-center gap-3 overflow-hidden rounded-lg border-2 border-status-emergency bg-status-emergency p-4 text-white"
             >
-              <div className="flex flex-wrap items-center gap-3">
-                <Siren className="h-7 w-7 shrink-0 animate-pulse" />
-                <div className="min-w-0">
-                  <p className="text-sm font-black uppercase tracking-wide">
-                    {t.triage.emergencyTitle}
-                  </p>
-                  <p className="mt-0.5 flex items-center gap-1.5 text-sm font-bold text-red-100">
-                    <PhoneCall className="h-4 w-4 shrink-0" />
-                    {t.escalation.notifiedBanner}
-                  </p>
-                </div>
-                <span className="ml-auto rounded-full bg-white/15 px-3 py-1 text-xs font-extrabold ring-1 ring-white/30">
-                  {recommendedFacility.name}
-                </span>
+              <Siren className="h-7 w-7 shrink-0 animate-pulse" />
+              <div className="min-w-0">
+                <p className="text-sm font-black uppercase tracking-wide">
+                  {t.triage.emergencyTitle}
+                </p>
+                <p className="mt-0.5 flex items-center gap-1.5 text-sm font-bold opacity-90">
+                  <PhoneCall className="h-4 w-4 shrink-0" />
+                  {t.escalation.notifiedBanner}
+                </p>
               </div>
+              <span className="ml-auto rounded-md bg-white/15 px-3 py-1 text-xs font-extrabold">
+                {recommendedFacility.name}
+              </span>
             </div>
           )}
 
           <TriageResult result={result.result} source={result.source} lang={lang} />
 
-          <div className="glass-card mt-6 p-6 md:p-8">                  <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-300">
+          <div className="ds-panel mt-6 p-6 md:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand">
                   <Hospital className="h-6 w-6" />
                 </div>
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    {t.triage.recommendedFacility}
-                  </p>
-                  <h3 className="text-lg font-extrabold text-slate-800">
+                  <p className="ds-label">{t.triage.recommendedFacility}</p>
+                  <h3 className="text-lg font-extrabold text-ink-strong">
                     {recommendedFacility.name}
                   </h3>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-ink-mute">
                     {t.levels[recommendedFacility.level]} · {recommendedFacility.district}
                   </p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-teal-500/15 px-3 py-1 text-xs font-bold text-teal-700 dark:text-teal-300">
+                <span className="rounded-md bg-panel-2 px-3 py-1.5 text-xs font-bold text-ink">
                   {availableBeds(recommendedFacility)}/{totalBeds(recommendedFacility)}{" "}
                   {t.triage.bedsAvailable}
                 </span>
-                <span className="rounded-full bg-sky-500/15 px-3 py-1 text-xs font-bold text-sky-700 dark:text-sky-300">
+                <span className="rounded-md bg-panel-2 px-3 py-1.5 text-xs font-bold text-ink">
                   {recommendedFacility.doctorCount} {t.stats.doctors}
                 </span>
               </div>
@@ -295,15 +286,15 @@ export default function TriageClient({ lang }: { lang: Language }) {
                 return (
                   <div
                     key={category}
-                    className="surface-soft flex items-center justify-between rounded-xl px-4 py-3 ring-1 ring-slate-900/5 dark:ring-white/10"
+                    className="flex items-center justify-between rounded-lg border border-line bg-panel-2 px-4 py-3"
                   >
-                    <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      <BedDouble className="h-4 w-4 text-blue-700" />
+                    <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-ink-mute">
+                      <BedDouble className="h-4 w-4 text-brand" />
                       {t.bedTypes[category]}
                     </span>
-                    <span className="text-sm font-extrabold text-slate-800">
+                    <span className="text-sm font-extrabold text-ink-strong">
                       {bed.available}
-                      <span className="font-medium text-slate-400">/{bed.total}</span>
+                      <span className="font-medium text-ink-faint">/{bed.total}</span>
                     </span>
                   </div>
                 );
@@ -312,7 +303,7 @@ export default function TriageClient({ lang }: { lang: Language }) {
 
             <Link
               href="/appointments"
-              className="btn-primary mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-extrabold sm:w-auto"
+              className="ds-btn ds-btn-primary mt-6 w-full sm:w-auto"
             >
               <CalendarPlus className="h-5 w-5" />
               {t.triage.bookAppointment}

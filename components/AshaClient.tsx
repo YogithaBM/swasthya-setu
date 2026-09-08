@@ -36,9 +36,9 @@ import {
 import { getTranslations, translations, type Language } from "@/lib/translations";
 
 const SEVERITY_CHIP_STYLES: Record<TriageSeverity, string> = {
-  red: "bg-red-50 text-red-700 ring-red-200",
-  yellow: "bg-amber-50 text-amber-800 ring-amber-200",
-  green: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  red: "bg-status-emergency-tint text-status-emergency ring-red-200",
+  yellow: "bg-status-attention-tint text-status-attention ring-amber-200",
+  green: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 const GENDER_KEYS: Gender[] = ["male", "female", "other"];
@@ -168,14 +168,14 @@ export default function AshaClient({ lang }: { lang: Language }) {
   const inputClasses = (hasError: boolean) =>
     `mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
       hasError
-        ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-red-200"
+        ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
         : "border-slate-200 bg-slate-50 focus:border-amber-600 focus:ring-amber-600/20"
     }`;
 
   const fieldErrorElement = (field: "name" | "phone") => {
     const message = fieldError(field);
     return message ? (
-      <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-red-600">
+      <p role="alert" className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-status-emergency">
         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
         {message}
       </p>
@@ -194,7 +194,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
       {toast && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-emerald-700 dark:text-emerald-300"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 ds-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-status-safe "
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {toast}
@@ -203,14 +203,10 @@ export default function AshaClient({ lang }: { lang: Language }) {
 
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-700 ring-1 ring-amber-200">
-          <HeartHandshake className="h-4 w-4" />
-          {t.asha.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.asha.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.asha.description}
         </p>
@@ -218,9 +214,9 @@ export default function AshaClient({ lang }: { lang: Language }) {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[440px_1fr]">
         {/* Registration form */}
-        <section className="h-fit glass-card p-6 lg:sticky lg:top-6 md:p-8">
+        <section className="h-fit ds-panel p-6 lg:sticky lg:top-6 md:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-status-attention-tint text-status-attention">
               <ClipboardPlus className="h-6 w-6" />
             </div>
             <div>
@@ -232,7 +228,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <label className="block sm:col-span-2">
               <span className="text-sm font-bold text-slate-600">
-                {t.asha.nameLabel} <span className="text-red-500">*</span>
+                {t.asha.nameLabel} <span className="text-status-emergency">*</span>
               </span>
               <input
                 type="text"
@@ -250,7 +246,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
 
             <label className="block sm:col-span-2">
               <span className="text-sm font-bold text-slate-600">
-                {t.asha.phoneLabel} <span className="text-red-500">*</span>
+                {t.asha.phoneLabel} <span className="text-status-emergency">*</span>
               </span>
               <input
                 type="tel"
@@ -347,10 +343,10 @@ export default function AshaClient({ lang }: { lang: Language }) {
         </section>
 
         {/* My Patients */}
-        <section className="min-w-0 glass-card p-6 md:p-8">
+        <section className="min-w-0 ds-panel p-6 md:p-8">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
                 <Users className="h-5 w-5" />
               </div>
               <div>
@@ -395,7 +391,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
                           </span>
                         )}
                         {referred && (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-extrabold text-blue-800 ring-1 ring-blue-200">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-2 py-0.5 text-[10px] font-extrabold text-brand ring-1 ring-blue-200">
                             <CheckCircle2 className="h-3 w-3" />
                             {t.asha.referredChip}
                           </span>
@@ -442,7 +438,7 @@ export default function AshaClient({ lang }: { lang: Language }) {
                           referred
                             ? "cursor-default bg-slate-100 text-slate-400"
                             : hasSymptoms
-                              ? "bg-blue-800 text-white shadow-md shadow-blue-900/20 hover:bg-blue-900"
+                              ? "bg-brand-strong text-brand-strong-ink  hover:bg-brand"
                               : "cursor-not-allowed bg-slate-100 text-slate-400"
                         }`}
                       >

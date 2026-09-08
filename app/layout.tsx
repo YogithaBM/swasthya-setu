@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
       </head>
       <body
-        className={`${inter.variable} ${notoSans.variable} font-sans min-h-screen text-slate-900 antialiased dark:text-slate-100`}
+        className={`${inter.variable} ${notoSans.variable} font-sans min-h-screen antialiased`}
       >
         {/* AppShell handles login redirects, role-based route access, and the top nav. */}
         <AppShell lang={lang}>{children}</AppShell>

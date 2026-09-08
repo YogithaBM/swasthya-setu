@@ -13,8 +13,8 @@ import {
 import { getTranslations, translations, type Language } from "@/lib/translations";
 
 const STATUS_STYLES: Record<LabStatus, string> = {
-  Pending: "bg-amber-50 text-amber-800 ring-amber-200",
-  Completed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  Pending: "bg-status-attention-tint text-status-attention ring-amber-200",
+  Completed: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 export default function LabOrdersClient({ lang }: { lang: Language }) {
@@ -59,7 +59,7 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
       {toast && (
         <div
           role="alert"
-          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 glass-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-emerald-700 dark:text-emerald-300"
+          className="fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 ds-toast rounded-xl px-4 py-3 text-center text-sm font-extrabold text-status-safe "
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {toast}
@@ -68,14 +68,10 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
 
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-sky-700 ring-1 ring-sky-200">
-          <Microscope className="h-4 w-4" />
-          {t.labOrders.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.labOrders.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.labOrders.description}
         </p>
@@ -83,18 +79,18 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
 
       {/* Summary counts */}
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl bg-amber-50 p-5 text-amber-800 ring-1 ring-amber-200">
+        <div className="rounded-2xl bg-status-attention-tint p-5 text-status-attention ring-1 ring-amber-200">
           <p className="text-3xl font-black">{pendingCount}</p>
           <p className="mt-0.5 text-sm font-extrabold">{t.labOrders.statusPending}</p>
         </div>
-        <div className="rounded-2xl bg-emerald-50 p-5 text-emerald-800 ring-1 ring-emerald-200">
+        <div className="rounded-2xl bg-status-safe-tint p-5 text-status-safe ring-1 ring-emerald-200">
           <p className="text-3xl font-black">{completedCount}</p>
           <p className="mt-0.5 text-sm font-extrabold">{t.labOrders.statusCompleted}</p>
         </div>
       </div>
 
       {/* Table */}
-      <div className="mt-6 glass-card p-6 md:p-8">
+      <div className="mt-6 ds-panel p-6 md:p-8">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px] text-left text-sm">
             <thead>
@@ -113,13 +109,13 @@ export default function LabOrdersClient({ lang }: { lang: Language }) {
                 return (
                   <tr
                     key={order.id}
-                    className="border-b border-slate-100 transition last:border-0 hover:bg-blue-50/40"
+                    className="border-b border-slate-100 transition last:border-0 hover:bg-brand-tint/40"
                   >
                     <td className="px-3 py-3 font-extrabold text-slate-800">
                       {order.patientName}
                     </td>
                     <td className="px-3 py-3">
-                      <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-panel-2 px-2 py-0.5 text-[11px] font-bold text-ink-mute ring-1 ring-sky-200">
                         <Microscope className="h-3 w-3" />
                         {order.testName}
                       </span>

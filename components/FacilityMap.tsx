@@ -69,11 +69,11 @@ export default function FacilityMap({ lang }: { lang: Language }) {
               </p>
               <div className="my-1 h-px bg-slate-100" />
               <p className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                <Stethoscope className="h-3.5 w-3.5 text-emerald-600" />
+                <Stethoscope className="h-3.5 w-3.5 text-status-safe" />
                 {facility.doctorCount} {t.stats.doctors}
               </p>
               <p className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                <BedDouble className="h-3.5 w-3.5 text-blue-700" />
+                <BedDouble className="h-3.5 w-3.5 text-brand" />
                 {availableBeds(facility)}/{totalBeds(facility)}{" "}
                 {t.triage.bedsAvailable}
               </p>

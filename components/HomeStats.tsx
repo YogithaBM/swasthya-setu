@@ -57,32 +57,26 @@ export default function HomeStats({ facilityCount, labels }: HomeStatsProps) {
     };
   }, []);
 
-  const cardClass =
-    "glass-card lift-hover px-4 py-5 text-slate-100 dark:text-slate-100";
+  const cards = [
+    { icon: Building2, value: facilityCount, label: labels.facilities },
+    { icon: Users, value: stats.patientsServed, label: labels.patientsServed },
+    { icon: CalendarDays, value: stats.appointmentsToday, label: labels.appointmentsToday },
+  ];
 
   return (
     <div className="mx-auto mt-12 grid max-w-3xl gap-4 sm:grid-cols-3">
-      <div className={cardClass} style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
-        <div className="flex items-center justify-center gap-3">
-          <Building2 className="h-6 w-6 text-teal-300" />
-          <p className="text-3xl font-extrabold">{facilityCount}</p>
-        </div>
-        <p className="mt-1 text-xs font-medium text-teal-50/85">{labels.facilities}</p>
-      </div>
-      <div className={cardClass} style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
-        <div className="flex items-center justify-center gap-3">
-          <Users className="h-6 w-6 text-teal-300" />
-          <p className="text-3xl font-extrabold">{stats.patientsServed}</p>
-        </div>
-        <p className="mt-1 text-xs font-medium text-teal-50/85">{labels.patientsServed}</p>
-      </div>
-      <div className={cardClass} style={{ background: "rgba(255,255,255,0.12)", borderColor: "rgba(255,255,255,0.2)" }}>
-        <div className="flex items-center justify-center gap-3">
-          <CalendarDays className="h-6 w-6 text-teal-300" />
-          <p className="text-3xl font-extrabold">{stats.appointmentsToday}</p>
-        </div>
-        <p className="mt-1 text-xs font-medium text-teal-50/85">{labels.appointmentsToday}</p>
-      </div>
+      {cards.map((card) => {
+        const Icon = card.icon;
+        return (
+          <div key={card.label} className="ds-panel px-4 py-5 text-center">
+            <div className="flex items-center justify-center gap-3">
+              <Icon className="h-6 w-6 text-brand" />
+              <p className="text-3xl font-extrabold text-ink-strong">{card.value}</p>
+            </div>
+            <p className="mt-1 text-xs font-medium text-ink-mute">{card.label}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

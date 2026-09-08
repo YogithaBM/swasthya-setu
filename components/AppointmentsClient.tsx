@@ -36,8 +36,8 @@ interface Confirmation {
 }
 
 const STATUS_STYLES: Record<AppointmentStatus, string> = {
-  Waiting: "bg-amber-50 text-amber-800 ring-amber-200",
-  Completed: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  Waiting: "bg-status-attention-tint text-status-attention ring-amber-200",
+  Completed: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 /** Latin + Devanagari letters, spaces and basic punctuation. */
@@ -249,7 +249,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
     return message ? (
       <p
         role="alert"
-        className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-red-600"
+        className="mt-1.5 flex items-center gap-1.5 text-xs font-bold text-status-emergency"
       >
         <AlertCircle className="h-3.5 w-3.5 shrink-0" />
         {message}
@@ -260,7 +260,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
   const inputClasses = (field: FieldKey) =>
     `mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 ${
       visibleError(field)
-        ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-red-200"
+        ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
         : "border-slate-200 bg-slate-50 focus:border-blue-700 focus:ring-blue-700/20"
     }`;
 
@@ -278,14 +278,10 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
 
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-blue-800 ring-1 ring-blue-200">
-          <CalendarPlus className="h-4 w-4" />
-          {t.appointments.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.appointments.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.appointments.description}
         </p>
@@ -298,10 +294,10 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
           event.preventDefault();
           handleBook();
         }}
-        className="mt-8 glass-card p-6 md:p-8"
+        className="mt-8 ds-panel p-6 md:p-8"
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
             <CalendarDays className="h-6 w-6" />
           </div>
           <div>
@@ -313,7 +309,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
         {/* Facility */}
         <label className="mt-6 block">
           <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
-            <Hospital className="h-4 w-4 text-emerald-600" />
+            <Hospital className="h-4 w-4 text-status-safe" />
             {t.appointments.facilityLabel}
           </span>
           <select
@@ -340,7 +336,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
           {/* Date */}
           <label className="block">
             <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
-              <CalendarDays className="h-4 w-4 text-blue-700" />
+              <CalendarDays className="h-4 w-4 text-brand" />
               {t.appointments.dateLabel}
             </span>
             <input
@@ -365,7 +361,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
           {/* Patient name */}
           <label className="block">
             <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
-              <User className="h-4 w-4 text-blue-700" />
+              <User className="h-4 w-4 text-brand" />
               {t.appointments.nameLabel}
             </span>
             <input
@@ -390,7 +386,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
         {/* Phone */}
         <label className="mt-5 block">
           <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
-            <Phone className="h-4 w-4 text-emerald-600" />
+            <Phone className="h-4 w-4 text-status-safe" />
             {t.appointments.phoneLabel}
           </span>
           <input
@@ -416,7 +412,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
         {/* Time slots */}
         <div className="mt-6">
           <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
-            <Clock className="h-4 w-4 text-blue-700" />
+            <Clock className="h-4 w-4 text-brand" />
             {t.appointments.timeLabel}
           </span>
           <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
@@ -432,8 +428,8 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
                   }}
                   className={`rounded-lg px-1 py-2 text-[11px] font-bold transition ${
                     selected
-                      ? "bg-blue-800 text-white shadow-md shadow-blue-800/25"
-                      : "bg-slate-50 text-slate-600 ring-1 ring-slate-200 hover:bg-blue-50 hover:text-blue-800 hover:ring-blue-200"
+                      ? "bg-brand text-page"
+                      : "bg-slate-50 text-slate-600 ring-1 ring-slate-200 hover:bg-brand-tint hover:text-brand hover:ring-blue-200"
                   }`}
                 >
                   {slot.label}
@@ -465,16 +461,16 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
 
       {/* Confirmation */}
       {confirmation && confirmationFacility && (
-        <div className="mt-6 rounded-3xl bg-gradient-to-br from-emerald-50 to-emerald-100/60 p-6 ring-1 ring-emerald-200 md:p-8">
+        <div className="mt-6 ds-panel border-2 border-status-safe bg-status-safe-tint p-6 md:p-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-status-safe-tint text-status-safe">
               <CheckCircle2 className="h-6 w-6" />
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-emerald-900">
+              <h2 className="text-lg font-extrabold text-status-safe">
                 {t.appointments.confirmationTitle}
               </h2>
-              <p className="text-sm text-emerald-700">{t.appointments.confirmationSub}</p>
+              <p className="text-sm text-status-safe">{t.appointments.confirmationSub}</p>
             </div>
           </div>
 
@@ -483,10 +479,10 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
               <Ticket className="h-3.5 w-3.5" />
               {t.appointments.colQueue}
             </span>
-            <p className="text-6xl font-black leading-none text-blue-800">
+            <p className="text-6xl font-black leading-none text-brand">
               {confirmation.queue}
             </p>
-            <p className="text-sm font-bold text-emerald-800">
+            <p className="text-sm font-bold text-status-safe">
               {t.appointments.queueMessage.replace("{n}", String(confirmation.queue))}
             </p>
           </div>
@@ -520,7 +516,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 {t.appointments.waitTime}
               </p>
-              <p className="mt-0.5 text-sm font-extrabold text-blue-800">
+              <p className="mt-0.5 text-sm font-extrabold text-brand">
                 {t.appointments.waitMinutes.replace("{n}", String(confirmation.queue * 5))}
               </p>
             </div>
@@ -537,7 +533,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
           <button
             type="button"
             onClick={resetForm}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-emerald-700 ring-1 ring-emerald-300 transition hover:bg-emerald-50"
+            className="mt-6 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-status-safe ring-1 ring-emerald-300 transition hover:bg-status-safe-tint"
           >
             <CalendarPlus className="h-4 w-4" />
             {t.appointments.bookAnother}
@@ -546,11 +542,11 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
       )}
 
       {/* Today's appointments */}
-      <div className="mt-8 glass-card p-6 md:p-8">
+      <div className="mt-8 ds-panel p-6 md:p-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
-              <Users className="h-5 w-5 text-blue-800" />
+              <Users className="h-5 w-5 text-brand" />
               {t.appointments.todayAppointments}
             </h2>
             <p className="mt-0.5 text-sm text-slate-500">{t.appointments.todaySub}</p>
@@ -564,8 +560,8 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
                 onClick={() => setFilter(tab.key)}
                 className={`rounded-full px-4 py-1.5 text-xs font-extrabold ring-1 transition ${
                   filter === tab.key
-                    ? "bg-blue-800 text-white ring-blue-800 shadow-md shadow-blue-800/25"
-                    : "bg-white text-slate-600 ring-slate-200 hover:bg-blue-50 hover:text-blue-800"
+                    ? "bg-brand text-page"
+                    : "bg-white text-slate-600 ring-slate-200 hover:bg-brand-tint hover:text-brand"
                 }`}
               >
                 {tab.label} ({tab.count})
@@ -596,7 +592,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
                   <tr
                     key={appointment.id}
                     className={`border-b border-slate-100 transition last:border-0 ${
-                      appointment.isNew ? "bg-emerald-50/60" : "hover:bg-blue-50/40"
+                      appointment.isNew ? "bg-status-safe-tint/60" : "hover:bg-brand-tint/40"
                     }`}
                   >
                     <td className="px-3 py-3">
@@ -616,7 +612,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
                       {appointment.time}
                     </td>
                     <td className="px-3 py-3 text-center">
-                      <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-lg bg-blue-50 px-1.5 text-sm font-black text-blue-800 ring-1 ring-blue-200">
+                      <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-lg bg-brand-tint px-1.5 text-sm font-black text-brand ring-1 ring-blue-200">
                         {appointment.queueNumber}
                       </span>
                     </td>

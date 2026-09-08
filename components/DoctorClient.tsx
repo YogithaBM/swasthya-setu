@@ -185,14 +185,14 @@ function mergeQueue(): Patient[] {
 }
 
 const SEVERITY_CHIP_STYLES: Record<TriageSeverity, string> = {
-  red: "bg-red-50 text-red-700 ring-red-200",
-  yellow: "bg-amber-50 text-amber-800 ring-amber-200",
-  green: "bg-emerald-50 text-emerald-700 ring-emerald-200",
+  red: "bg-status-emergency-tint text-status-emergency ring-red-200",
+  yellow: "bg-status-attention-tint text-status-attention ring-amber-200",
+  green: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 const LAB_STATUS_STYLES: Record<LabStatus, string> = {
-  Pending: "bg-amber-100 text-amber-800 ring-amber-200",
-  Completed: "bg-emerald-100 text-emerald-700 ring-emerald-200",
+  Pending: "bg-status-attention-tint text-status-attention ring-amber-200",
+  Completed: "bg-status-safe-tint text-status-safe ring-emerald-200",
 };
 
 const FREQUENCY_KEYS: FrequencyKey[] = ["once", "twice", "thrice", "asNeeded"];
@@ -546,7 +546,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
       {toast && (
         <div
           role="alert"
-          className="glass-toast fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 rounded-xl px-4 py-3 text-center text-sm font-extrabold text-emerald-700 dark:text-emerald-300"
+          className="ds-toast fixed left-1/2 top-5 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-center gap-2 rounded-xl px-4 py-3 text-center text-sm font-extrabold text-status-safe "
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
           {toast}
@@ -555,14 +555,10 @@ export default function DoctorClient({ lang }: { lang: Language }) {
 
       {/* Header */}
       <div className="text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-200">
-          <Stethoscope className="h-4 w-4" />
-          {t.doctor.badge}
-        </span>
         <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">
           {t.doctor.title}
         </h1>
-        <p className="mt-2 text-lg font-bold text-blue-800 md:text-2xl">{otherTitle}</p>
+        <p className="mt-2 text-lg font-bold text-brand md:text-2xl">{otherTitle}</p>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-500 md:text-base">
           {t.doctor.description}
         </p>
@@ -570,9 +566,9 @@ export default function DoctorClient({ lang }: { lang: Language }) {
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[300px_1fr]">
         {/* LEFT — Patient queue */}
-        <section className="glass-card h-fit p-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+        <section className="ds-panel h-fit p-5 lg:sticky lg:top-6 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
           <div className="flex items-center gap-3 px-1">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
               <Users className="h-5 w-5" />
             </div>
             <div className="min-w-0">
@@ -593,7 +589,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                       onClick={() => selectPatient(patient)}
                       className={`flex w-full min-w-0 flex-1 items-center gap-3 rounded-2xl p-3 text-left transition ${
                         selected
-                          ? "bg-teal-500/10 ring-2 ring-teal-500"
+                          ? "bg-brand-tint ring-2 ring-brand"
                           : "ring-1 ring-slate-900/5 hover:bg-slate-100/70 dark:ring-white/10 dark:hover:bg-white/5"
                       }`}
                     >
@@ -615,7 +611,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                             </span>
                           )}
                         </span>
-                        <span className="shrink-0 rounded-lg bg-blue-50 px-1.5 py-0.5 text-xs font-black text-blue-800 ring-1 ring-blue-200">
+                        <span className="shrink-0 rounded-lg bg-brand-tint px-1.5 py-0.5 text-xs font-black text-brand ring-1 ring-blue-200">
                           #{patient.queueNumber}
                         </span>
                       </span>
@@ -637,7 +633,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                     </span>
                     <ChevronRight
                       className={`h-4 w-4 shrink-0 ${
-                        selected ? "text-blue-700" : "text-slate-300"
+                        selected ? "text-brand" : "text-slate-300"
                       }`}
                     />
                   </button>
@@ -650,7 +646,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                       }}
                       title={t.common.completedStatus}
                       aria-label={t.common.completedStatus}
-                      className="flex h-11 w-9 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200 transition hover:bg-emerald-100 hover:text-emerald-700"
+                      className="flex h-11 w-9 shrink-0 items-center justify-center rounded-2xl bg-status-safe-tint text-status-safe ring-1 ring-emerald-200 transition hover:bg-status-safe-tint hover:text-status-safe"
                     >
                       <CheckCircle2 className="h-4 w-4" />
                     </button>
@@ -675,14 +671,14 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                 className="flex w-full items-center gap-2 rounded-xl px-1 py-1.5 text-left transition hover:bg-slate-50"
               >
                 {showCompletedToday ? (
-                  <Unlock className="h-3.5 w-3.5 text-emerald-600" />
+                  <Unlock className="h-3.5 w-3.5 text-status-safe" />
                 ) : (
-                  <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                  <Lock className="h-3.5 w-3.5 text-status-safe" />
                 )}
-                <span className="flex-1 text-xs font-extrabold text-emerald-700">
+                <span className="flex-1 text-xs font-extrabold text-status-safe">
                   {t.common.completedToday}
                 </span>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-black text-emerald-700">
+                <span className="rounded-full bg-status-safe-tint px-2 py-0.5 text-[11px] font-black text-status-safe">
                   {completedToday}
                 </span>
                 {showCompletedToday ? (
@@ -696,11 +692,11 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   {getCompletedOn(todayStr).map((appointment) => (
                     <li
                       key={appointment.id}
-                      className="flex items-center gap-2 rounded-lg bg-emerald-50/60 px-2.5 py-1.5 text-xs font-bold text-emerald-800"
+                      className="flex items-center gap-2 rounded-lg bg-status-safe-tint/60 px-2.5 py-1.5 text-xs font-bold text-status-safe"
                     >
-                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-status-safe" />
                       <span className="truncate">{appointment.patientName}</span>
-                      <span className="ml-auto shrink-0 text-[10px] font-semibold text-emerald-600">
+                      <span className="ml-auto shrink-0 text-[10px] font-semibold text-status-safe">
                         #{appointment.queueNumber} · {appointment.time}
                       </span>
                     </li>
@@ -714,18 +710,18 @@ export default function DoctorClient({ lang }: { lang: Language }) {
         {/* RIGHT — details + prescription */}
         <section className="min-w-0">
           {saved ? (
-            <div className="print-prescription glass-card p-6 md:p-8">
+            <div className="print-prescription ds-panel p-6 md:p-8">
               {/* Brand header */}
               <div className="flex items-center justify-between border-b-2 border-emerald-600 pb-4">
                 <div>
-                  <p className="text-2xl font-black tracking-tight text-blue-900">
+                  <p className="text-2xl font-black tracking-tight text-brand">
                     {t.appName}
                   </p>
-                  <p className="text-sm font-extrabold text-emerald-600">
+                  <p className="text-sm font-extrabold text-status-safe">
                     {t.doctor.cardHeader}
                   </p>
                 </div>
-                <span className="rounded-xl bg-emerald-50 px-3 py-2 text-right ring-1 ring-emerald-200">
+                <span className="rounded-xl bg-status-safe-tint px-3 py-2 text-right ring-1 ring-emerald-200">
                   <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     {t.appointments.selectedDate}
                   </p>
@@ -762,7 +758,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                     {SEVERITY_LABELS[saved.patient.severity][lang]}
                   </span>
                   {saved.referral && (
-                    <p className="mt-1 text-[11px] font-bold text-red-600">
+                    <p className="mt-1 text-[11px] font-bold text-status-emergency">
                       ⚠ {t.doctor.urgency}
                     </p>
                   )}
@@ -772,7 +768,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                     {t.doctor.doctorLabel}
                   </p>
                   <p className="mt-0.5 flex items-center gap-1.5 text-sm font-extrabold text-slate-800">
-                    <Stethoscope className="h-4 w-4 text-emerald-600" />
+                    <Stethoscope className="h-4 w-4 text-status-safe" />
                     {t.doctor.doctorName}
                   </p>
                 </div>
@@ -822,8 +818,8 @@ export default function DoctorClient({ lang }: { lang: Language }) {
 
               {/* Notes */}
               {saved.notes && (
-                <div className="mt-5 rounded-xl bg-amber-50/70 px-4 py-3 ring-1 ring-amber-100">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-amber-600">
+                <div className="mt-5 rounded-xl bg-status-attention-tint/70 px-4 py-3 ring-1 ring-amber-100">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-status-attention">
                     {t.doctor.notes}
                   </p>
                   <p className="mt-0.5 text-sm font-semibold text-slate-700">
@@ -838,37 +834,37 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                 (saved.labTests?.length ?? 0) > 0) && (
                 <div className="mt-5 grid gap-3 sm:grid-cols-2">
                   {saved.followUp && saved.followUpDate && (
-                    <div className="rounded-xl bg-blue-50/70 px-4 py-3 ring-1 ring-blue-100">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-blue-600">
+                    <div className="rounded-xl bg-brand-tint/70 px-4 py-3 ring-1 ring-blue-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-brand">
                         {t.doctor.scheduleFollowup}
                       </p>
                       <p className="mt-0.5 flex items-center gap-1.5 text-sm font-extrabold text-slate-800">
-                        <CalendarClock className="h-4 w-4 text-blue-700" />
+                        <CalendarClock className="h-4 w-4 text-brand" />
                         {formatLongDate(saved.followUpDate)}
                       </p>
                     </div>
                   )}
                   {saved.referral && saved.referTarget && (
-                    <div className="rounded-xl bg-red-50/70 px-4 py-3 ring-1 ring-red-100">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-red-600">
+                    <div className="rounded-xl bg-status-emergency-tint/70 px-4 py-3 ring-1 ring-red-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-status-emergency">
                         {t.doctor.referTarget}
                       </p>
                       <p className="mt-0.5 flex items-center gap-1.5 text-sm font-extrabold text-slate-800">
-                        <ArrowLeftRight className="h-4 w-4 text-red-600" />
+                        <ArrowLeftRight className="h-4 w-4 text-status-emergency" />
                         {getFacilityById(saved.referTarget)?.name ?? saved.referTarget}
                       </p>
                     </div>
                   )}
                   {saved.labTests && saved.labTests.length > 0 && (
-                    <div className="rounded-xl bg-sky-50/70 px-4 py-3 ring-1 ring-sky-100">
-                      <p className="text-[10px] font-bold uppercase tracking-wider text-sky-600">
+                    <div className="rounded-xl bg-panel-2/70 px-4 py-3 ring-1 ring-sky-100">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-ink-mute">
                         {t.doctor.orderTests}
                       </p>
                       <div className="mt-1 flex flex-wrap gap-1">
                         {saved.labTests.map((test) => (
                           <span
                             key={test}
-                            className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200"
+                            className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-ink-mute ring-1 ring-sky-200"
                           >
                             <Microscope className="h-3 w-3" />
                             {test}
@@ -902,7 +898,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   <button
                     type="button"
                     onClick={newPrescription}
-                    className="btn-secondary inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-extrabold"
+                    className="ds-btn ds-btn-secondary inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-extrabold"
                   >
                     <FileText className="h-4 w-4" />
                     {t.doctor.newPrescription}
@@ -910,7 +906,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-br from-slate-600 to-slate-700 px-5 py-2.5 text-sm font-extrabold text-white shadow-md transition hover:-translate-y-0.5 hover:brightness-110 dark:from-slate-500 dark:to-slate-600"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-ink-strong px-5 py-2.5 text-sm font-extrabold text-page transition hover:opacity-9000"
                   >
                     <Printer className="h-4 w-4" />
                     {t.doctor.print}
@@ -921,10 +917,10 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                     onClick={() => handleSendToPatient(saved.patient)}
                     className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-sm font-extrabold text-white transition ${
                       sendState === "sent"
-                        ? "bg-gradient-to-br from-emerald-400 to-emerald-500 shadow-lg shadow-emerald-500/30"
+                        ? "bg-status-safe"
                         : sendState === "sending"
-                          ? "bg-gradient-to-br from-teal-400 to-teal-500 shadow-lg shadow-teal-500/30"
-                          : "bg-gradient-to-br from-teal-500 to-teal-600 shadow-md shadow-teal-600/30 hover:-translate-y-0.5 hover:shadow-lg"
+                          ? "bg-brand "
+                          : "bg-brand-strong shadow-md  hover:-translate-y-0.5 hover:shadow-lg"
                     }`}
                   >
                     {sendState === "idle" && (
@@ -940,11 +936,11 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               </div>
             </div>
           ) : (
-            <div className="glass-card p-6 md:p-8">
+            <div className="ds-panel p-6 md:p-8">
               {/* Patient details */}
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
                     <User className="h-6 w-6" />
                   </div>
                   <div>
@@ -975,7 +971,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
 
               {/* Form */}
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-status-safe-tint text-status-safe">
                   <FileText className="h-5 w-5" />
                 </div>
                 <div>
@@ -993,7 +989,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               <label className="mt-5 block">
                 <span className="text-sm font-bold text-slate-600">
                   {t.doctor.diagnosis}
-                  <span className="text-red-500"> *</span>
+                  <span className="text-status-emergency"> *</span>
                 </span>
                 <input
                   type="text"
@@ -1007,12 +1003,12 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   placeholder={t.doctor.diagPlaceholder}
                   className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
                     errors.diagnosis
-                      ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-red-200"
+                      ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
                       : "border-slate-200 bg-slate-50 focus:border-blue-700 focus:ring-blue-700/20"
                   }`}
                 />
                 {errors.diagnosis && (
-                  <p className="mt-1.5 text-xs font-bold text-red-600">
+                  <p className="mt-1.5 text-xs font-bold text-status-emergency">
                     {errors.diagnosis}
                   </p>
                 )}
@@ -1021,15 +1017,15 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               {/* Medicines */}
               <div className="mt-6">
                 <div className="flex items-center gap-2">
-                  <Pill className="h-4 w-4 text-blue-700" />
+                  <Pill className="h-4 w-4 text-brand" />
                   <span className="text-sm font-bold text-slate-600">
                     {t.doctor.medicinesLabel}
-                    <span className="text-red-500"> *</span>
+                    <span className="text-status-emergency"> *</span>
                   </span>
                 </div>
 
                 {medicineErrorText && (
-                  <p className="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs font-bold text-red-600 ring-1 ring-red-200">
+                  <p className="mt-2 rounded-xl bg-status-emergency-tint px-3 py-2 text-xs font-bold text-status-emergency ring-1 ring-red-200">
                     {medicineErrorText}
                   </p>
                 )}
@@ -1054,7 +1050,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                           onClick={() => removeMedicine(medicine.id)}
                           title={t.doctor.removeMedicine}
                           aria-label={t.doctor.removeMedicine}
-                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold text-red-500 ring-1 ring-red-100 transition hover:bg-red-50"
+                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-bold text-status-emergency ring-1 ring-red-100 transition hover:bg-status-emergency-tint"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
@@ -1134,7 +1130,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                 <button
                   type="button"
                   onClick={addMedicine}
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/50 px-4 py-2.5 text-sm font-extrabold text-emerald-700 transition hover:border-emerald-400 hover:bg-emerald-50"
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-emerald-300 bg-status-safe-tint/50 px-4 py-2.5 text-sm font-extrabold text-status-safe transition hover:border-emerald-400 hover:bg-status-safe-tint"
                 >
                   <Plus className="h-4 w-4" />
                   {t.doctor.addMedicine}
@@ -1144,7 +1140,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               {/* Lab tests */}
               <div className="mt-6">
                 <div className="flex items-center gap-2">
-                  <Microscope className="h-4 w-4 text-sky-700" />
+                  <Microscope className="h-4 w-4 text-ink-mute" />
                   <div>
                     <p className="text-sm font-bold text-slate-600">
                       {t.doctor.orderTests}
@@ -1160,8 +1156,8 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                         key={test}
                         className={`flex cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 ring-1 transition ${
                           selected
-                            ? "bg-sky-50 ring-sky-300"
-                            : "bg-slate-50 ring-slate-200 hover:bg-sky-50/50"
+                            ? "bg-panel-2 ring-sky-300"
+                            : "bg-slate-50 ring-slate-200 hover:bg-panel-2/50"
                         }`}
                       >
                         <input
@@ -1178,7 +1174,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                         />
                         <span
                           className={`text-xs font-bold ${
-                            selected ? "text-sky-900" : "text-slate-600"
+                            selected ? "text-ink-mute" : "text-slate-600"
                           }`}
                         >
                           {test}
@@ -1204,7 +1200,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               </label>
 
               {/* Urgency — referral to a higher facility */}
-              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-xl bg-red-50/60 px-4 py-3 ring-1 ring-red-100">
+              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-xl bg-status-emergency-tint/60 px-4 py-3 ring-1 ring-red-100">
                 <input
                   type="checkbox"
                   checked={referral}
@@ -1220,18 +1216,18 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   }}
                   className="h-4 w-4 accent-red-600"
                 />
-                <span className="text-sm font-bold text-red-700">
+                <span className="text-sm font-bold text-status-emergency">
                   ⚠ {t.doctor.urgency}
                 </span>
               </label>
 
               {referral && (
-                <div className="mt-3 rounded-xl bg-red-50/40 p-4 ring-1 ring-red-100">
+                <div className="mt-3 rounded-xl bg-status-emergency-tint/40 p-4 ring-1 ring-red-100">
                   <label className="block">
                     <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
-                      <ArrowLeftRight className="h-4 w-4 text-red-600" />
+                      <ArrowLeftRight className="h-4 w-4 text-status-emergency" />
                       {t.doctor.referTarget}
-                      <span className="text-red-500"> *</span>
+                      <span className="text-status-emergency"> *</span>
                     </span>
                     <select
                       value={referTarget}
@@ -1246,7 +1242,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                       }}
                       className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 ${
                         errors.referTarget
-                          ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-red-200"
+                          ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
                           : "border-slate-200 bg-white focus:border-red-500 focus:ring-red-200"
                       }`}
                     >
@@ -1260,7 +1256,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                         ))}
                     </select>
                     {errors.referTarget && (
-                      <p className="mt-1.5 text-xs font-bold text-red-600">
+                      <p className="mt-1.5 text-xs font-bold text-status-emergency">
                         {errors.referTarget}
                       </p>
                     )}
@@ -1269,7 +1265,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               )}
 
               {/* High-risk follow-up */}
-              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-xl bg-blue-50/60 px-4 py-3 ring-1 ring-blue-100">
+              <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-xl bg-brand-tint/60 px-4 py-3 ring-1 ring-blue-100">
                 <input
                   type="checkbox"
                   checked={followUp}
@@ -1282,18 +1278,18 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   }}
                   className="h-4 w-4 accent-blue-700"
                 />
-                <span className="flex items-center gap-1.5 text-sm font-bold text-blue-800">
+                <span className="flex items-center gap-1.5 text-sm font-bold text-brand">
                   <CalendarClock className="h-4 w-4" />
                   {t.doctor.scheduleFollowup}
                 </span>
               </label>
 
               {followUp && (
-                <div className="mt-3 rounded-xl bg-blue-50/40 p-4 ring-1 ring-blue-100">
+                <div className="mt-3 rounded-xl bg-brand-tint/40 p-4 ring-1 ring-blue-100">
                   <label className="block">
                     <span className="text-sm font-bold text-slate-600">
                       {t.doctor.followupDate}
-                      <span className="text-red-500"> *</span>
+                      <span className="text-status-emergency"> *</span>
                     </span>
                     <input
                       type="date"
@@ -1307,12 +1303,12 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                       }}
                       className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 ${
                         errors.followUp
-                          ? "border-red-400 bg-red-50/50 focus:border-red-500 focus:ring-red-200"
+                          ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
                           : "border-slate-200 bg-white focus:border-blue-700 focus:ring-blue-700/20"
                       }`}
                     />
                     {errors.followUp && (
-                      <p className="mt-1.5 text-xs font-bold text-red-600">
+                      <p className="mt-1.5 text-xs font-bold text-status-emergency">
                         {errors.followUp}
                       </p>
                     )}
@@ -1323,7 +1319,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               <button
                 type="button"
                 onClick={handleSave}
-                className="btn-primary mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-base font-extrabold sm:w-auto"
+                className="ds-btn ds-btn-primary mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 text-base font-extrabold sm:w-auto"
               >
                 <FileText className="h-5 w-5" />
                 {t.doctor.savePrescription}
@@ -1332,12 +1328,12 @@ export default function DoctorClient({ lang }: { lang: Language }) {
               {/* Feature 1 — longitudinal patient history (timeline) */}
               <div className="mt-8 border-t border-slate-100 pt-6">
                 <div className="flex items-center gap-2">
-                  <History className="h-4 w-4 text-blue-700" />
+                  <History className="h-4 w-4 text-brand" />
                   <h3 className="text-sm font-extrabold text-slate-800">
                     {t.doctor.pastVisits}
                   </h3>
                   {history.length > 0 && (
-                    <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-black text-blue-800 ring-1 ring-blue-200">
+                    <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[11px] font-black text-brand ring-1 ring-blue-200">
                       {history.length}
                     </span>
                   )}
@@ -1356,7 +1352,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                       >
                         <div className="flex items-center justify-between gap-2">
                           <p className="flex items-center gap-2 text-sm font-extrabold text-slate-800">
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[11px] font-black text-blue-800">
+                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-tint text-[11px] font-black text-brand">
                               {history.length - index}
                             </span>
                             {formatLongDate(record.date)}
@@ -1392,7 +1388,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                             key={order.id}
                             className="mt-2 flex flex-wrap items-center gap-1.5"
                           >
-                            <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-panel-2 px-2.5 py-1 text-[11px] font-bold text-ink-mute ring-1 ring-sky-200">
                               <Microscope className="h-3 w-3" />
                               {order.testName}
                             </span>
@@ -1424,12 +1420,12 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                     {unmatchedOrders.map((order) => (
                       <div
                         key={order.id}
-                        className="flex flex-wrap items-center gap-1.5 rounded-xl bg-sky-50/50 px-3 py-2 ring-1 ring-sky-100"
+                        className="flex flex-wrap items-center gap-1.5 rounded-xl bg-panel-2/50 px-3 py-2 ring-1 ring-sky-100"
                       >
                         <span className="text-[11px] font-bold text-slate-500">
                           {formatLongDate(order.dateOrdered)}
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-sky-800 ring-1 ring-sky-200">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[11px] font-bold text-ink-mute ring-1 ring-sky-200">
                           <Microscope className="h-3 w-3" />
                           {order.testName}
                         </span>
