@@ -147,23 +147,27 @@ export default function TopNav({
           </span>
         </Link>
 
-        {/* Center nav links (desktop) — inline + "More ▾" for the rest.
-            min-w-0 lets links shrink instead of clipping at the logo edge;
-            links are whitespace-nowrap so labels never break mid-word. */}
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto lg:flex">
-          {topItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            return (
-              <Link key={item.href} href={item.href} className={linkClass(isActive)}>
-                <Icon className={`h-4 w-4 ${isActive ? "" : "text-slate-600 dark:text-slate-400"}`} />
-                {t.nav[item.labelKey]}
-              </Link>
-            );
-          })}
+        {/* Center nav links (desktop). The link row scrolls horizontally when
+            space runs out, but the "More" dropdown is a SIBLING — a scroll
+            container would clip the absolutely-positioned menu. */}
+        <div className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex">
+          <nav className="nav-scroll flex min-w-0 items-center overflow-x-auto">
+            <div className="mx-auto flex items-center gap-1">
+              {topItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <Link key={item.href} href={item.href} className={linkClass(isActive)}>
+                    <Icon className={`h-4 w-4 ${isActive ? "" : "text-slate-600 dark:text-slate-400"}`} />
+                    {t.nav[item.labelKey]}
+                  </Link>
+                );
+              })}
+            </div>
+          </nav>
 
           {moreItems.length > 0 && (
-            <div ref={moreRef} className="relative">
+            <div ref={moreRef} className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setMoreOpen((open) => !open)}
@@ -204,7 +208,7 @@ export default function TopNav({
               )}
             </div>
           )}
-        </nav>
+        </div>
 
         {/* Right controls */}
         <div className="ml-auto flex shrink-0 items-center gap-2 lg:ml-0">

@@ -478,7 +478,7 @@ export const translations: Record<Language, Translation> = {
       labOrders: "Lab Orders",
       escalations: "Escalations",
       myRecords: "My Records",
-      moreMenu: "More ▾",
+      moreMenu: "More",
       asha: "My Patients",
     },
     roles: {
@@ -944,7 +944,7 @@ export const translations: Record<Language, Translation> = {
       labOrders: "लैब ऑर्डर",
       escalations: "एस्कलेशन",
       myRecords: "मेरे रिकॉर्ड",
-      moreMenu: "और ▾",
+      moreMenu: "और",
       asha: "मेरे मरीज़",
     },
     roles: {
