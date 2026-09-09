@@ -1001,10 +1001,10 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                     }
                   }}
                   placeholder={t.doctor.diagPlaceholder}
-                  className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
+                  className={`ds-input mt-2 text-sm font-semibold ${
                     errors.diagnosis
-                      ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
-                      : "border-slate-200 bg-slate-50 focus:border-blue-700 focus:ring-blue-700/20"
+                      ? "border-status-emergency bg-status-emergency-tint/50"
+                      : ""
                   }`}
                 />
                 {errors.diagnosis && (
@@ -1067,7 +1067,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                               updateMedicine(medicine.id, { name: event.target.value })
                             }
                             placeholder={t.doctor.medNamePh}
-                            className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+                            className="ds-input mt-1 w-full px-3 py-2 text-sm font-semibold text-slate-800"
                           />
                         </label>
                         <label className="block">
@@ -1083,7 +1083,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                               })
                             }
                             placeholder={t.doctor.dosagePh}
-                            className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+                            className="ds-input mt-1 w-full px-3 py-2 text-sm font-semibold text-slate-800"
                           />
                         </label>
                         <label className="block">
@@ -1097,7 +1097,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                                 frequency: event.target.value as FrequencyKey,
                               })
                             }
-                            className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+                            className="ds-input mt-1 w-full px-3 py-2 text-sm font-semibold text-slate-800"
                           >
                             {FREQUENCY_KEYS.map((key) => (
                               <option key={key} value={key}>
@@ -1119,7 +1119,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                               })
                             }
                             placeholder={t.doctor.durationPh}
-                            className="mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+                            className="ds-input mt-1 w-full px-3 py-2 text-sm font-semibold text-slate-800"
                           />
                         </label>
                       </div>
@@ -1195,7 +1195,7 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                   onChange={(event) => setNotes(event.target.value)}
                   rows={3}
                   placeholder={t.doctor.notesPlaceholder}
-                  className="mt-2 w-full resize-y rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+                  className="ds-input mt-2 w-full resize-y px-4 py-2.5 text-sm font-semibold text-slate-800"
                 />
               </label>
 
@@ -1240,10 +1240,10 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                           }));
                         }
                       }}
-                      className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 ${
+                      className={`ds-input mt-2 text-sm font-semibold ${
                         errors.referTarget
-                          ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
-                          : "border-slate-200 bg-white focus:border-red-500 focus:ring-red-200"
+                          ? "border-status-emergency bg-status-emergency-tint/50"
+                          : ""
                       }`}
                     >
                       <option value="">{t.doctor.referTargetPh}</option>
@@ -1301,10 +1301,10 @@ export default function DoctorClient({ lang }: { lang: Language }) {
                           setErrors((previous) => ({ ...previous, followUp: undefined }));
                         }
                       }}
-                      className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 ${
+                      className={`ds-input mt-2 text-sm font-semibold ${
                         errors.followUp
-                          ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
-                          : "border-slate-200 bg-white focus:border-blue-700 focus:ring-blue-700/20"
+                          ? "border-status-emergency bg-status-emergency-tint/50"
+                          : ""
                       }`}
                     />
                     {errors.followUp && (

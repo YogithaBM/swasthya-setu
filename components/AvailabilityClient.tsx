@@ -848,7 +848,7 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
             <select
               value={facilityFilter}
               onChange={(event) => setFacilityFilter(event.target.value)}
-              className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+              className="ds-input px-3 py-2 text-sm font-semibold text-slate-800"
             >
               <option value="">{t.availability.allFacilities}</option>
               {facilities.map((facility) => (

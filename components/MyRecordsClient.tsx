@@ -245,7 +245,7 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
                 if (event.key === "Enter") handleSearch();
               }}
               placeholder={t.myRecords.phonePlaceholder}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base font-bold tracking-wide text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+              className="ds-input w-full px-4 py-3 text-base font-bold tracking-wide text-slate-800"
             />
             <button
               type="button"

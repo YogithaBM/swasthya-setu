@@ -175,7 +175,7 @@ export default function FacilitiesClient({ lang }: { lang: Language }) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={t.facilities.searchPlaceholder}
-              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-9 text-sm text-slate-800 placeholder:text-slate-400 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+              className="ds-input w-full py-2.5 pl-10 pr-9 text-sm"
             />
             {query && (
               <button

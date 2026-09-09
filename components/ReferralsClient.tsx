@@ -154,7 +154,7 @@ export default function ReferralsClient({ lang }: { lang: Language }) {
                             )
                           }
                           aria-label={t.referrals.colStatus}
-                          className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-bold text-slate-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700/20"
+                          className="ds-input px-2 py-1.5 text-xs font-bold text-slate-700"
                         >
                           {REFERRAL_STATUSES.map((status) => (
                             <option key={status} value={status}>

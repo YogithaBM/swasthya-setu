@@ -166,10 +166,10 @@ export default function AshaClient({ lang }: { lang: Language }) {
   }
 
   const inputClasses = (hasError: boolean) =>
-    `mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 ${
+    `ds-input mt-2 text-sm font-semibold ${
       hasError
-        ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
-        : "border-slate-200 bg-slate-50 focus:border-amber-600 focus:ring-amber-600/20"
+        ? "border-status-emergency bg-status-emergency-tint/50"
+        : ""
     }`;
 
   const fieldErrorElement = (field: "name" | "phone") => {

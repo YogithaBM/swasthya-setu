@@ -258,10 +258,10 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
   };
 
   const inputClasses = (field: FieldKey) =>
-    `mt-2 w-full rounded-xl border px-4 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 ${
+    `ds-input mt-2 text-sm font-semibold ${
       visibleError(field)
-        ? "border-red-400 bg-status-emergency-tint/50 focus:border-red-500 focus:ring-red-200"
-        : "border-slate-200 bg-slate-50 focus:border-blue-700 focus:ring-blue-700/20"
+        ? "border-status-emergency bg-status-emergency-tint/50"
+        : ""
     }`;
 
   return (
@@ -352,7 +352,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
               onBlur={() => markTouched("date")}
               className={inputClasses("date")}
             />
-            <span className="mt-1 block text-xs text-slate-400">
+            <span className="mt-1 block text-xs text-ink-faint">
               {todayStr} – {maxDateStr}
             </span>
             {fieldError("date")}
@@ -360,7 +360,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
 
           {/* Patient name */}
           <label className="block">
-            <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
+            <span className="flex items-center gap-1.5 text-sm font-bold text-ink-mute">
               <User className="h-4 w-4 text-brand" />
               {t.appointments.nameLabel}
             </span>
@@ -385,7 +385,7 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
 
         {/* Phone */}
         <label className="mt-5 block">
-          <span className="flex items-center gap-1.5 text-sm font-bold text-slate-600">
+          <span className="flex items-center gap-1.5 text-sm font-bold text-ink-mute">
             <Phone className="h-4 w-4 text-status-safe" />
             {t.appointments.phoneLabel}
           </span>

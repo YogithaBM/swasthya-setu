@@ -119,6 +119,32 @@ body {
   min-height: 100vh;
 }
 
+/* ==========================================================================
+   Form-field legibility guarantee — typed text must ALWAYS be readable.
+   User-entered text uses the theme ink (dark in light mode, light in dark);
+   placeholders stay visibly muted. !important wins over stray utility
+   classes on legacy fields.
+   ========================================================================== */
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  color: var(--ink) !important;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-faint) !important;
+  opacity: 1 !important;
+}
+/* Placeholder color inside <select> (empty value, e.g. "Select facility"). */
+select:invalid {
+  color: var(--ink-faint) !important;
+}
+
 @layer components {
   /* ========================================================================
      Design-system primitives (ds-*) — the components used across all pages.
