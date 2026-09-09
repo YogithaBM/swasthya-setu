@@ -4,7 +4,6 @@ import {
   BedDouble,
   Building2,
   CalendarDays,
-  HeartPulse,
   Hospital,
   MessagesSquare,
   Ticket,
@@ -35,10 +34,10 @@ export default function HomePage() {
       {/* Hero — flat brand-tint band, no gradient, no blobs. */}
       <section className="border-b border-line bg-brand-tint">
         <div className="mx-auto max-w-5xl px-6 py-16 text-center md:py-20">
-          <span className="inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-4 py-2 text-xs font-semibold uppercase tracking-wider text-ink-mute">
-            <HeartPulse className="h-4 w-4 text-brand" />
+          {/* Plain eyebrow text — deliberately unstyled (no badge look). */}
+          <p className="text-xs font-semibold uppercase tracking-wider text-ink-mute">
             {t.heroBadge}
-          </span>
+          </p>
           <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-ink-strong md:text-6xl">
             {t.appName}
             <span className="mt-2 block text-2xl font-bold text-brand md:text-4xl">

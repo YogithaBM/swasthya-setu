@@ -46,6 +46,7 @@ import {
 import { addReferral } from "@/lib/referrals";
 import { SEVERITY_EMOJI, SEVERITY_LABELS, type TriageSeverity } from "@/lib/triage";
 import { getTranslations, translations, type Language } from "@/lib/translations";
+import { scrollToFirstError } from "@/lib/scrollToError";
 
 type FrequencyKey = "once" | "twice" | "thrice" | "asNeeded";
 
@@ -341,7 +342,11 @@ export default function DoctorClient({ lang }: { lang: Language }) {
     }
 
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+    if (Object.keys(nextErrors).length > 0) {
+      // Bring the first invalid field into view once errors render.
+      window.setTimeout(scrollToFirstError, 0);
+      return;
+    }
 
     const date = localDateString(new Date());
     const meds = medicines.filter((m) => m.name.trim() && m.dosage.trim());

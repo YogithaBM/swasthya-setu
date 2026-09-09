@@ -29,6 +29,7 @@ import { getReferrals, type Referral } from "@/lib/referrals";
 import { getFollowups, type Followup } from "@/lib/followups";
 import { SEVERITY_EMOJI, SEVERITY_LABELS } from "@/lib/triage";
 import { getTranslations, translations, type Language } from "@/lib/translations";
+import { scrollToFirstError } from "@/lib/scrollToError";
 
 const SEVERITY_CHIP_STYLES: Record<PatientRecord["severity"], string> = {
   red: "bg-status-emergency-tint text-status-emergency ring-red-200",
@@ -100,6 +101,8 @@ export default function MyRecordsClient({ lang }: { lang: Language }) {
           ? "10 अंकों का मोबाइल नंबर डालें।"
           : "Enter a 10-digit mobile number."
       );
+      // Bring the error toast into view once it renders.
+      window.setTimeout(scrollToFirstError, 0);
       return;
     }
     setPhoneError(null);

@@ -113,10 +113,18 @@ button {
 }
 
 body {
-  /* Theme-adaptive page surface (warm off-white / warm charcoal). */
-  background: var(--page);
+  /* Warm off-white with faint radial depth — same color family, less flat. */
+  background-color: var(--page);
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(200, 180, 160, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(180, 200, 180, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(160, 180, 200, 0.05) 0%, transparent 50%);
+  background-attachment: fixed;
   color: var(--ink);
   min-height: 100vh;
+}
+.dark body {
+  background-image: none; /* flat charcoal in dark — depth is light-mode only */
 }
 
 /* ==========================================================================
@@ -156,7 +164,9 @@ select:invalid {
     background: var(--panel);
     border: 1px solid var(--line);
     border-radius: 12px;
-    box-shadow: 0 1px 2px rgba(38, 48, 43, 0.05);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.06),
+      0 4px 12px rgba(0, 0, 0, 0.04);
   }
 
   /* Buttons — same shape/logic both themes; only variables change. */
@@ -386,6 +396,13 @@ select:invalid {
 .dark .bg-slate-50 { background-color: var(--panel-2); }
 .dark .bg-slate-100 { background-color: var(--panel-2); }
 .dark .bg-slate-200 { background-color: var(--line); }
+/* Opacity variants are SEPARATE classes in Tailwind — remap them too, or
+   cards like the ASHA patient list keep light backgrounds in dark mode. */
+.dark .bg-white\/80 { background-color: var(--panel); }
+.dark .bg-white\/70 { background-color: var(--panel); }
+.dark .bg-slate-50\/80 { background-color: var(--panel-2); }
+.dark .bg-slate-100\/70 { background-color: var(--panel-2); }
+.dark .bg-slate-200\/70 { background-color: var(--line); }
 .dark .text-slate-900 { color: var(--ink-strong); }
 .dark .text-slate-800 { color: var(--ink); }
 .dark .text-slate-700 { color: var(--ink); }

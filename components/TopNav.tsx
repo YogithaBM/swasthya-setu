@@ -147,8 +147,10 @@ export default function TopNav({
           </span>
         </Link>
 
-        {/* Center nav links (desktop) — inline + "More ▾" for the rest */}
-        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 lg:flex">
+        {/* Center nav links (desktop) — inline + "More ▾" for the rest.
+            min-w-0 lets links shrink instead of clipping at the logo edge;
+            links are whitespace-nowrap so labels never break mid-word. */}
+        <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto lg:flex">
           {topItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;

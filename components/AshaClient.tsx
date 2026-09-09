@@ -27,6 +27,7 @@ import {
   type Gender,
 } from "@/lib/ashaPatients";
 import { facilities, getFacilityById } from "@/lib/data";
+import { scrollToFirstError } from "@/lib/scrollToError";
 import {
   SEVERITY_EMOJI,
   SEVERITY_LABELS,
@@ -114,7 +115,11 @@ export default function AshaClient({ lang }: { lang: Language }) {
         ? t.appointments.phoneInvalid
         : undefined;
     setTouched({ name: true, phone: true });
-    if (nameError || phoneError) return;
+    if (nameError || phoneError) {
+      // Bring the first invalid field into view once errors render.
+      window.setTimeout(scrollToFirstError, 0);
+      return;
+    }
 
     const patient: AshaPatient = {
       id: `asha-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -235,7 +240,12 @@ export default function AshaClient({ lang }: { lang: Language }) {
                 value={name}
                 maxLength={100}
                 onChange={(event) => {
-                  setName(event.target.value.replace(/\d/g, ""));
+                  // Digits rejected; capitalize each word of the name.
+                  setName(
+                    event.target.value
+                      .replace(/\d/g, "")
+                      .replace(/(^|\s)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase())
+                  );
                   setTouched((previous) => ({ ...previous, name: true }));
                 }}
                 placeholder={t.asha.namePh}

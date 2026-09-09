@@ -157,8 +157,8 @@ function seededNumber(seed: string, min: number, max: number): number {
 
 function occupancyBarColor(occupancy: number): string {
   if (occupancy > 70) return "bg-red-500";
-  if (occupancy > 50) return "bg-amber-400";
-  return "bg-emerald-500";
+  if (occupancy > 50) return "bg-amber-500";
+  return "bg-brand"; /* sage — matches brand accents, visible on dark tracks */
 }
 
 /** Sample footfall per weekday (Sun..Sat), 20-80 patients per day. */
@@ -895,18 +895,17 @@ export default function AvailabilityClient({ lang }: { lang: Language }) {
                       {row.facilityName}
                     </span>
                   </td>
-                  <td className="px-3 py-3">
-                    <div className="max-w-[140px]">
-                      <span className="font-extrabold text-slate-700">{row.stock}</span>
-                      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                        <div
-                          className="h-full rounded-full bg-brand-tint"
-                          style={{
-                            width: `${Math.max(3, (row.stock / maxStock) * 100)}%`,
-                          }}
-                        />
+                  <td className="px-3 py-3">                      <div className="max-w-[140px]">
+                        <span className="font-extrabold text-slate-700">{row.stock}</span>
+                        <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200 ring-1 ring-slate-200">
+                          <div
+                            className="h-full rounded-full bg-brand"
+                            style={{
+                              width: `${Math.max(3, (row.stock / maxStock) * 100)}%`,
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
                   </td>
                   <td className="px-3 py-3">
                     <span

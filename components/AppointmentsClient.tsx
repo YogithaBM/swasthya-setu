@@ -22,6 +22,7 @@ import {
   type StoredAppointment,
 } from "@/lib/appointments";
 import { facilities } from "@/lib/data";
+import { scrollToFirstError } from "@/lib/scrollToError";
 import { getTranslations, translations, type Language } from "@/lib/translations";
 
 type FilterKey = "all" | "Waiting" | "Completed";
@@ -173,6 +174,8 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
     if (Object.keys(errors).length > 0) {
       markAllTouched();
       showToast(t.appointments.toastError);
+      // Bring the first invalid field into view once errors render.
+      window.setTimeout(scrollToFirstError, 0);
       return;
     }
 
@@ -371,8 +374,12 @@ export default function AppointmentsClient({ lang }: { lang: Language }) {
               maxLength={100}
               value={patientName}
               onChange={(event) => {
-                // Reject numbers as the user types.
-                setPatientName(event.target.value.replace(/\d/g, ""));
+                // Reject numbers as the user types; capitalize each word.
+                setPatientName(
+                  event.target.value
+                    .replace(/\d/g, "")
+                    .replace(/(^|\s)([a-z])/g, (_, sep, ch) => sep + ch.toUpperCase())
+                );
                 markTouched("name");
               }}
               onBlur={() => markTouched("name")}
