@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { HeartPulse, Moon, Stethoscope, Sun } from "lucide-react";
+import { Moon, Stethoscope, Sun } from "lucide-react";
 
 import { useTheme } from "@/lib/theme";
 import { getTranslations, type Language } from "@/lib/translations";
@@ -24,9 +24,8 @@ export default function PublicNav({ lang }: { lang: Language }) {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-panel shadow-sm">
       <div className="flex h-16 items-center justify-between gap-3 px-4 md:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-strong text-brand-strong-ink">
-            <HeartPulse className="h-5 w-5" />
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icon.png" alt="Swasthya Setu" className="h-10 w-10 rounded-lg" />
           <span className="leading-tight">
             <span className="block text-base font-extrabold tracking-tight text-ink-strong">
               {t.appName}
